@@ -7,6 +7,8 @@ export HR_LOCAL_DIR=$(realpath $(cd $(dirname $0); pwd))
 
 # 编译出来的镜像保存位置
 export IMAGE_DEPLOY_DIR=${HR_LOCAL_DIR}/deploy
+export CROSS_COMPILE=/opt/gcc-ubuntu-9.3.0-2020.03-x86_64-aarch64-linux-gnu/bin/aarch64-linux-gnu-
+export LD_LIBRARY_PATH=/opt/gcc-ubuntu-9.3.0-2020.03-x86_64-aarch64-linux-gnu/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
 [ ! -z ${IMAGE_DEPLOY_DIR} ] && [ ! -d $IMAGE_DEPLOY_DIR ] && mkdir $IMAGE_DEPLOY_DIR
 
 ARCH=arm64
