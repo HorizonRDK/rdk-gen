@@ -24,7 +24,7 @@ main()
     for pkg_name in ${deb_pkg_list[@]}
     do
         # Get the latest version number from the Packages file
-        VERSION=$(curl -sf http://archive.sunrisepi.tech/ubuntu-ports/dists/focal/main/binary-arm64/Packages | awk -v pkg=$pkg_name '$1 == "Package:" && $2 == pkg {getline; print}' | awk '{print $2}' | sort -V | tail -n1)
+        VERSION=$(curl -sf http://archive.sunrisepi.tech/ubuntu-rdk-beta/dists/focal/main/binary-arm64/Packages | awk -v pkg=$pkg_name '$1 == "Package:" && $2 == pkg {getline; print}' | awk '{print $2}' | sort -V | tail -n1)
 
         if [[ -z "$VERSION" ]]; then
             echo "Error: Unable to retrieve version number for $pkg_name" >&2
