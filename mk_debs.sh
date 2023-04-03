@@ -380,6 +380,16 @@ function make_debian_deb() {
 
         is_allowed=1
         ;;
+    hobot-multimedia-samples)
+        pkg_description="Example of Multimedia (using VAPI)"
+
+        gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
+
+        # set Depends
+        sed -i 's/Depends: .*$/Depends: hobot-multimedia-dev,hobot-multimedia/' ${deb_dst_dir}/DEBIAN/control
+
+        is_allowed=1
+        ;;
     *)
         echo "Error: Make package ${pkg_name}-${pkg_version} failed"
         is_allowed=0
@@ -414,6 +424,7 @@ deb_pkg_version["hobot-camera"]="2.0.0"
 deb_pkg_version["hobot-dnn"]="2.0.0"
 deb_pkg_version["hobot-spdev"]="2.0.0"
 deb_pkg_version["hobot-sp-samples"]="2.0.0"
+deb_pkg_version["hobot-multimedia-samples"]="2.0.0"
 
 function help_msg
 {
