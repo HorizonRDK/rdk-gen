@@ -7,7 +7,7 @@
  # @LastEditTime: 2023-03-22 17:46:10
 ### 
 
-set -x
+set -ex
 
 export HR_LOCAL_DIR=$(realpath $(cd $(dirname $0); pwd))
 export HR_ROOTFS_PART_NAME="system"
@@ -183,9 +183,6 @@ function make_ubuntu_image()
 
 ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
 ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages
-
-rm ${HR_LOCAL_DIR}/deb_packages/*.deb
-cp ${IMAGE_DEPLOY_DIR}/deb_pkgs/*.deb ${HR_LOCAL_DIR}/deb_packages/
 
 make_ubuntu_image
 
