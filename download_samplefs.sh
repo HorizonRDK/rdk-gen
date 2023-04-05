@@ -11,7 +11,9 @@ set -e
 
 main()
 {
-    cd $1
+    rootfs_dir="$1"
+    [ ! -z ${rootfs_dir} ] && [ ! -d ${rootfs_dir} ] && mkdir ${rootfs_dir}
+    cd ${rootfs_dir}
 
     # Set the URL of the file server
     SERVER_URL="http://archive.sunrisepi.tech/samplefs"
@@ -48,10 +50,10 @@ main()
             echo "File ${FILE_NAME}.md5sum downloaded failed"
             return -1
         fi
-        
+
         # Extract the file name and md5sum value from the md5sum file
         FILE_MD5SUM=$(cat "${FILE_NAME}.md5sum" | grep ${FILE_NAME} | cut -d " " -f1)
-        
+
         # Download the file
         echo "Downloading ${FILE} ..."
         if curl -f -O "${SERVER_URL}/${FILE_NAME}/${FILE}"; then
@@ -60,10 +62,10 @@ main()
             echo "File ${FILE} downloaded failed"
             return -1
         fi
-        
+
         # Calculate the md5sum of the downloaded file
         DOWNLOADED_MD5SUM=$(md5sum "${FILE}" | awk '{print $1}')
-        
+
         # Verify the md5sum value of the downloaded file
         if [[ "$FILE_MD5SUM" == "$DOWNLOADED_MD5SUM" ]]; then
             echo "File ${FILE} verify successfully"
