@@ -65,7 +65,7 @@ function install_deb_chroot()
 
     cd "${dst_dir}/app/hobot_debs"
     echo "###### Installing" "${package} ######"
-    depends=$(dpkg-deb -f "${package}" Depends)
+    depends=$(dpkg-deb -f "${package}" Depends | sed 's/([^()]*)//g')
     if [ -f ${package} ];then
         chroot "${dst_dir}" /bin/bash -c "dpkg --ignore-depends=${depends// /} -i /app/hobot_debs/${package}"
     fi
