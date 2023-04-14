@@ -185,7 +185,7 @@ function make_ubuntu_image()
 
     cd "${HR_LOCAL_DIR}"
     rsync -aHAXx --exclude /var/cache/apt/archives --exclude /boot/config "${ROOTFS_BUILD_DIR}/" "${ROOTFS_DIR}/"
-    rsync -rtx "${HR_LOCAL_DIR}/config" "${ROOTFS_DIR}/boot/config"
+    rsync -rtx "${HR_LOCAL_DIR}/config/" "${ROOTFS_DIR}/boot/config"
     sync
     unmount_image "${IMG_FILE}"
     rm -rf "${ROOTFS_DIR}"
