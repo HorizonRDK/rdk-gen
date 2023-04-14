@@ -61,9 +61,6 @@ EOF
     rm -f "${DST_ROOTFS_DIR}/etc/systemd/system/multi-user.target.wants/ondemand.service"
   fi
 
-  # mount config
-  echo "LABEL=CONFIG  /boot/config  auto defaults  0  1" >> "${DST_ROOTFS_DIR}"/etc/fstab
-
   # initial date for fake-
   # Configure fake-hwclock
   date '+%Y-%m-%d %H:%M:%S' > "${DST_ROOTFS_DIR}"/etc/fake-hwclock.data
