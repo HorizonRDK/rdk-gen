@@ -3,8 +3,8 @@
  # COPYRIGHT NOTICE
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
- # @Date: 2023-03-16 10:02:18
- # @LastEditTime: 2023-03-22 17:46:10
+ # @Date: 2023-03-24 10:44:11
+ # @LastEditTime: 2023-04-14 13:05:31
 ### 
 
 set -ex
@@ -18,45 +18,18 @@ if [ "${this_user}" != "root" ]; then
     exit 1
 fi
 
+
 # 编译出来的镜像保存位置
 export IMAGE_DEPLOY_DIR=${HR_LOCAL_DIR}/deploy
 [ ! -z ${IMAGE_DEPLOY_DIR} ] && [ ! -d $IMAGE_DEPLOY_DIR ] && mkdir $IMAGE_DEPLOY_DIR
 
-rm -f ${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}_sdcard.img
+IMG_FILE="${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}_sdcard.img"
 
 ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs
 ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs
 rm -rf ${ROOTFS_BUILD_DIR}
 [ ! -d $ROOTFS_BUILD_DIR ] && mkdir ${ROOTFS_BUILD_DIR}
 
-function get_partition_size()
-{
-    partition_size=$(du -sk ${ROOTFS_BUILD_DIR} | awk '{print $1}')
-    partition_size=$((${partition_size} * 1024))
-    if [ ! -z ${partition_size} ];then
-        # 扩大两倍，因为制作的
-        partition_size=$((${partition_size} * 2))
-        partition_align_size=$(($partition_size - 512*1024))
-    else
-        echo "rootfs size error: ${partition_size}"
-        exit -1
-    fi
-}
-
-if [[ "$fs_type" = "none" ]] || [[ "$fs_type" = "" ]] ;then
-    fs_type=${HR_ROOTFS_FS_TYPE}
-fi
-
-relpath() {
-    source_path=$1
-    full=$2
-    if [ "${full}" == "${source_path}" ]; then
-        echo ""
-    else
-        base=${source_path%%/}/
-        echo "${full##$base}"
-    fi
-}
 
 function install_deb_chroot()
 {
@@ -94,12 +67,42 @@ function install_packages()
     echo "Install hobot packages is finished"
 }
 
+function unmount(){
+    if [ -z "$1" ]; then
+        DIR=$PWD
+    else
+        DIR=$1
+    fi
+
+    while mount | grep -q "$DIR"; do
+        local LOCS
+        LOCS=$(mount | grep "$DIR" | cut -f 3 -d ' ' | sort -r)
+        for loc in $LOCS; do
+            umount "$loc"
+        done
+    done
+    }
+
+function unmount_image(){
+    sync
+    sleep 1
+    LOOP_DEVICE=$(losetup --list | grep "$1" | cut -f1 -d' ')
+    if [ -n "$LOOP_DEVICE" ]; then
+        for part in "$LOOP_DEVICE"p*; do
+            if DIR=$(findmnt -n -o target -S "$part"); then
+                unmount "$DIR"
+            fi
+        done
+        losetup -d "$LOOP_DEVICE"
+    fi
+}
+
 # 制作 ubuntu 根文件系统镜像
 function make_ubuntu_image()
 {
     # ubuntu 系统直接解压制作image
     echo "tar -xzf ${ROOTFS_ORIG_DIR}/samplefs*.tar.gz -C ${ROOTFS_BUILD_DIR}"
-    tar -xzf ${ROOTFS_ORIG_DIR}/samplefs*.tar.gz -C ${ROOTFS_BUILD_DIR}
+    tar --same-owner --numeric-owner -xzpf ${ROOTFS_ORIG_DIR}/samplefs*.tar.gz -C ${ROOTFS_BUILD_DIR}
     mkdir -p ${ROOTFS_BUILD_DIR}/{home,home/root,mnt,root,usr/lib,var,media,tftpboot,var/lib,var/volatile,dev,proc,tmp,run,sys,userdata,app,boot/hobot,boot/config}
     # echo "${HR_BSP_VERSION}" >${ROOTFS_BUILD_DIR}/etc/version
 
@@ -117,67 +120,73 @@ function make_ubuntu_image()
 
     install_packages ${ROOTFS_BUILD_DIR}
     rm ${ROOTFS_BUILD_DIR}/app/hobot_debs/ -rf
-
     rm -rf ${ROOTFS_BUILD_DIR}/lib/aarch64-linux-gnu/dri/
 
-    # 从实际的根文件系统大小里面直接计算得到根文件系统大小
-    get_partition_size
+    unmount_image "${IMG_FILE}"
+    rm -f "${IMG_FILE}"
 
-    make_ext4fs -l ${partition_size} -L ${HR_ROOTFS_PART_NAME} ${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}.img ${ROOTFS_BUILD_DIR}
-    # 压缩根文件系统镜像到最小尺寸
-    resize2fs -M ${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}.img
-    # 再最小尺寸上增加50MB空间，用于在系统第一次启动时存放各种服务的启动文件，方式服务启动失败
-    image_size=`ls -l --block-size=M ${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}.img | awk '{print $5}'`
-    resize2fs ${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}.img `expr ${image_size%?} + 50`M
+    ROOTFS_DIR=${IMAGE_DEPLOY_DIR}/rootfs_mount
+    rm -rf "${ROOTFS_DIR}"
+    mkdir -p "${ROOTFS_DIR}"
 
-    # sdcard启动方式，需要在生成的根文件系统前头加上分区表头用于烧录到sdcard上
-    cd ${IMAGE_DEPLOY_DIR}
-    # 添加分区信息
-    IMG_FILE="${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}_sdcard.img"
-
-    ROOT_SIZE=`ls -l --block-size=1 ${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}.img | awk '{print $5}'`
-
+    CONFIG_SIZE="$((256 * 1024 * 1024))"
+    ROOT_SIZE=$(du --apparent-size -s "${ROOTFS_BUILD_DIR}" --exclude var/cache/apt/archives --exclude boot/config --block-size=1 | cut -f 1)
     # All partition sizes and starts will be aligned to this size
     ALIGN="$((4 * 1024 * 1024))"
-    CONFIG_SIZE="$((256 * 1024 * 1024))"
+    # Add this much space to the calculated file size. This allows for
+    # some overhead (since actual space usage is usually rounded up to the
+    # filesystem block size) and gives some free space on the resulting
+    # image.
+    ROOT_MARGIN="$(echo "($ROOT_SIZE * 0.2 + 200 * 1024 * 1024) / 1" | bc)"
+
     CONFIG_PART_START=$((ALIGN))
     CONFIG_PART_SIZE=$(((CONFIG_SIZE + ALIGN - 1) / ALIGN * ALIGN))
     ROOT_PART_START=$((CONFIG_PART_START + CONFIG_PART_SIZE))
-    ROOT_PART_SIZE=$(((ROOT_SIZE + ALIGN  - 1) / ALIGN * ALIGN))
+    ROOT_PART_SIZE=$(((ROOT_SIZE + ROOT_MARGIN + ALIGN  - 1) / ALIGN * ALIGN))
     IMG_SIZE=$((CONFIG_PART_START + CONFIG_PART_SIZE + ROOT_PART_SIZE))
 
     truncate -s "${IMG_SIZE}" "${IMG_FILE}"
 
     parted --script "${IMG_FILE}" mklabel msdos
     parted --script "${IMG_FILE}" unit B mkpart primary fat32 "${CONFIG_PART_START}" "$((CONFIG_PART_START + CONFIG_PART_SIZE - 1))"
-    parted --script "${IMG_FILE}" unit B mkpart primary ${fs_type} "${ROOT_PART_START}" "$((ROOT_PART_START + ROOT_PART_SIZE - 1))"
+    parted --script "${IMG_FILE}" unit B mkpart primary ext4 "${ROOT_PART_START}" "$((ROOT_PART_START + ROOT_PART_SIZE - 1))"
     # 设置为启动分区
     parted "${IMG_FILE}" set 2 boot on
 
-    # 创建配置分区的镜像
-    CONFIG_PARTITION="${IMAGE_DEPLOY_DIR}/config_part.img"
-    rm -f ${CONFIG_PARTITION}
-    fallocate -l ${CONFIG_PART_SIZE} ${CONFIG_PARTITION}
-    mkfs.fat -nCONFIG -F32 -S512 -s4 "${CONFIG_PARTITION}" >/dev/null
-
-    CONFIG_PART_SOURCE="${HR_LOCAL_DIR}/config"
-    mkdir -p ${CONFIG_PART_SOURCE}
-    find "${CONFIG_PART_SOURCE}" -type d | while read dir; do
-        target=$(relpath "${CONFIG_PART_SOURCE}" "$dir")
-        [ -z "$target" ] && continue
-        # echo "  Creating $target"
-        mmd -i "${CONFIG_PARTITION}" "::$target"
-    done
-    find ${CONFIG_PART_SOURCE} -type f | while read file; do
-        target=$(relpath "${CONFIG_PART_SOURCE}" "$file")
-        # echo "  Copying $target"
-        mcopy -i "${CONFIG_PARTITION}" "$file" "::$target"
+    echo "Creating loop device..."
+    cnt=0
+    until LOOP_DEV="$(losetup --show --find --partscan "$IMG_FILE")"; do
+        if [ $cnt -lt 5 ]; then
+            cnt=$((cnt + 1))
+            echo "Error in losetup.  Retrying..."
+            sleep 5
+        else
+            echo "ERROR: losetup failed; exiting"
+            exit 1
+        fi
     done
 
-    # 在原来的文件之前添加用于存放分区表和配置分区的大小
-    dd if=${CONFIG_PARTITION} of=${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}_sdcard.img bs=1024 seek=$((CONFIG_PART_START / 1024))
-    dd if=${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}.img of=${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}_sdcard.img bs=1024 seek=$((ROOT_PART_START / 1024))
+    CONFIG_DEV="${LOOP_DEV}p1"
+    ROOT_DEV="${LOOP_DEV}p2"
 
+    ROOT_FEATURES="^huge_file"
+    for FEATURE in 64bit; do
+        if grep -q "$FEATURE" /etc/mke2fs.conf; then
+            ROOT_FEATURES="^$FEATURE,$ROOT_FEATURES"
+        fi
+    done
+    mkdosfs -n CONFIG -F 32 -s 4 -v "$CONFIG_DEV" > /dev/null
+    mkfs.ext4 -L rootfs -O "$ROOT_FEATURES" "$ROOT_DEV" > /dev/null
+
+    mount -v "$ROOT_DEV" "${ROOTFS_DIR}" -t ext4
+    mkdir -p "${ROOTFS_DIR}/boot/config"
+    mount -v "$CONFIG_DEV" "${ROOTFS_DIR}/boot/config" -t vfat
+
+    rsync -aHAXx --exclude /var/cache/apt/archives --exclude /boot/config "${ROOTFS_BUILD_DIR}/" "${ROOTFS_DIR}/"
+    rsync -rtx "${HR_LOCAL_DIR}/config" "${ROOTFS_DIR}/boot/config"
+
+    unmount_image "${IMG_FILE}"
+    rm -rf "${ROOTFS_DIR}"
     exit 0
 }
 
