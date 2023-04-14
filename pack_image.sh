@@ -4,7 +4,7 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-03-24 10:44:11
- # @LastEditTime: 2023-04-14 13:05:31
+ # @LastEditTime: 2023-04-14 23:49:48
 ### 
 
 set -ex
@@ -147,6 +147,7 @@ function make_ubuntu_image()
 
     truncate -s "${IMG_SIZE}" "${IMG_FILE}"
 
+    cd "${HR_LOCAL_DIR}"
     parted --script "${IMG_FILE}" mklabel msdos
     parted --script "${IMG_FILE}" unit B mkpart primary fat32 "${CONFIG_PART_START}" "$((CONFIG_PART_START + CONFIG_PART_SIZE - 1))"
     parted --script "${IMG_FILE}" unit B mkpart primary ext4 "${ROOT_PART_START}" "$((ROOT_PART_START + ROOT_PART_SIZE - 1))"
@@ -182,16 +183,20 @@ function make_ubuntu_image()
     mkdir -p "${ROOTFS_DIR}/boot/config"
     mount -v "$CONFIG_DEV" "${ROOTFS_DIR}/boot/config" -t vfat
 
+    cd "${HR_LOCAL_DIR}"
     rsync -aHAXx --exclude /var/cache/apt/archives --exclude /boot/config "${ROOTFS_BUILD_DIR}/" "${ROOTFS_DIR}/"
     rsync -rtx "${HR_LOCAL_DIR}/config" "${ROOTFS_DIR}/boot/config"
-
+    sync
     unmount_image "${IMG_FILE}"
     rm -rf "${ROOTFS_DIR}"
+
     exit 0
 }
 
-${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
-${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages
+if [ $# -eq 0 ];then
+    ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
+    ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages
+fi
 
 make_ubuntu_image
 
