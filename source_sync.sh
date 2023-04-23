@@ -38,25 +38,25 @@ SCRIPT_NAME=`basename $0`
 # info about sources.
 # NOTE: *Add only kernel repos here. Add new repos separately below. Keep related repos together*
 SOURCE_INFO="
-k:kernel:HorizonRoboticsRDK/kernel.git:
-o:bootloader:HorizonRoboticsRDK/bootloader.git:
-o:hobot-boot:HorizonRoboticsRDK/hobot-boot.git:
-o:hobot-bpu-drivers:HorizonRoboticsRDK/hobot-bpu-drivers.git:
-o:hobot-camera:HorizonRoboticsRDK/hobot-camera.git:
-o:hobot-configs:HorizonRoboticsRDK/hobot-configs.git:
-o:hobot-dnn:HorizonRoboticsRDK/hobot-dnn.git:
-o:hobot-dtb:HorizonRoboticsRDK/hobot-dtb.git:
-o:hobot-display:HorizonRoboticsRDK/hobot-display.git:
-o:hobot-io:HorizonRoboticsRDK/hobot-io.git:
-o:hobot-io-samples:HorizonRoboticsRDK/hobot-io-samples.git:
-o:hobot-kernel-headers:HorizonRoboticsRDK/hobot-kernel-headers.git:
-o:hobot-multimedia:HorizonRoboticsRDK/hobot-multimedia.git:
-o:hobot-multimedia-dev:HorizonRoboticsRDK/hobot-multimedia-dev.git:
-o:hobot-spdev:HorizonRoboticsRDK/hobot-spdev.git:
-o:hobot-sp-samples:HorizonRoboticsRDK/hobot-sp-samples.git:
-o:hobot-utils:HorizonRoboticsRDK/hobot-utils.git:
-o:hobot-wifi:HorizonRoboticsRDK/hobot-wifi.git:
-o:hobot-multimedia-samples:HorizonRoboticsRDK/hobot-multimedia-samples.git:
+k:kernel:HorizonRDK/kernel.git:
+o:bootloader:HorizonRDK/bootloader.git:
+o:hobot-boot:HorizonRDK/hobot-boot.git:
+o:hobot-bpu-drivers:HorizonRDK/hobot-bpu-drivers.git:
+o:hobot-camera:HorizonRDK/hobot-camera.git:
+o:hobot-configs:HorizonRDK/hobot-configs.git:
+o:hobot-dnn:HorizonRDK/hobot-dnn.git:
+o:hobot-dtb:HorizonRDK/hobot-dtb.git:
+o:hobot-display:HorizonRDK/hobot-display.git:
+o:hobot-io:HorizonRDK/hobot-io.git:
+o:hobot-io-samples:HorizonRDK/hobot-io-samples.git:
+o:hobot-kernel-headers:HorizonRDK/hobot-kernel-headers.git:
+o:hobot-multimedia:HorizonRDK/hobot-multimedia.git:
+o:hobot-multimedia-dev:HorizonRDK/hobot-multimedia-dev.git:
+o:hobot-spdev:HorizonRDK/hobot-spdev.git:
+o:hobot-sp-samples:HorizonRDK/hobot-sp-samples.git:
+o:hobot-utils:HorizonRDK/hobot-utils.git:
+o:hobot-wifi:HorizonRDK/hobot-wifi.git:
+o:hobot-multimedia-samples:HorizonRDK/hobot-multimedia-samples.git:
 "
 
 # exit on error on sync
