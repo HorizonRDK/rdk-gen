@@ -19,11 +19,11 @@ main()
 
     deb_pkg_list=(hobot-boot hobot-kernel-headers hobot-dtb hobot-bpu-drivers \
         hobot-configs hobot-utils \
-        hobot-hdmi hobot-wifi \
+        hobot-display hobot-wifi \
         hobot-io hobot-io-samples \
         hobot-multimedia hobot-multimedia-dev hobot-camera hobot-dnn \
         hobot-models-basic hhp-verify tros \
-        hobot-sp-cdev hobot-arm64-srcampy hobot-arm64-dnn-python )
+        hobot-spdev hobot-sp-samples )
 
     if curl -sfO "${archive_url}/dists/focal/main/binary-arm64/Packages"; then
         echo "File Packages downloaded successfully"

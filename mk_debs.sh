@@ -33,8 +33,20 @@ function gen_contrl_file() {
 	Depends: ""
 	Installed-Size: 0
 	Description: ${Description}
-	
+
 	EOF
+}
+
+function gen_conffiles() {
+    local dir="$1"
+    echo "Generate the conffiles, and add the files in the ${dir} directory to it"
+    touch ${control_path}/conffiles
+
+    cd ${deb_dst_dir}
+    for file in $(find "./${dir}" -type f); do
+        # Append each file to the conffiles file
+        echo "/${file#./}" >> ${control_path}/conffiles
+    done
 }
 
 function gen_copyright() {
@@ -132,6 +144,7 @@ function make_debian_deb() {
         mkdir -p ${boot_dest_dir}
         cp -arf ${IMAGE_DEPLOY_DIR}/kernel/Image  ${boot_dest_dir}/
         cp -arf ${KERNEL_DEPLOY_DIR}/modules/* ${deb_dst_dir}/
+
         is_allowed=1
         ;;
     hobot-kernel-headers)
@@ -171,6 +184,7 @@ function make_debian_deb() {
         dtb_dest_dir=${deb_dst_dir}/boot/hobot
         mkdir -p ${dtb_dest_dir}
         cp -arf ${IMAGE_DEPLOY_DIR}/kernel/dtb/* ${dtb_dest_dir}/
+
         is_allowed=1
         ;;
     hobot-bpu-drivers)
@@ -222,8 +236,8 @@ function make_debian_deb() {
         cp -a ${debian_src_dir}/${pkg_name}/hbutils/utility/prebuilds/hrut* $deb_dst_dir/usr/bin
         is_allowed=1
         ;;
-    hobot-hdmi)
-        pkg_description="Hdmi Support Package"
+    hobot-display)
+        pkg_description="Display Support Package"
 
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
@@ -348,7 +362,7 @@ function make_debian_deb() {
         is_allowed=1
         ;;
     hobot-spdev)
-        pkg_description="C/C++ Development Interface"
+        pkg_description="Python and C/C++ Development Interface"
 
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
@@ -371,7 +385,7 @@ function make_debian_deb() {
         is_allowed=1
         ;;
     hobot-sp-samples)
-        pkg_description="Example of Multimedia and BPU"
+        pkg_description="Example of Python and C/C++ Development Interface"
 
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
@@ -381,7 +395,7 @@ function make_debian_deb() {
         is_allowed=1
         ;;
     hobot-multimedia-samples)
-        pkg_description="Example of Multimedia (using VAPI)"
+        pkg_description="Example of Multimedia (Hapi)"
 
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
@@ -414,7 +428,7 @@ deb_pkg_version["hobot-dtb"]="2.0.0"
 deb_pkg_version["hobot-bpu-drivers"]="2.0.0"
 deb_pkg_version["hobot-configs"]="2.0.0"
 deb_pkg_version["hobot-utils"]="2.0.0"
-deb_pkg_version["hobot-hdmi"]="2.0.0"
+deb_pkg_version["hobot-display"]="2.0.0"
 deb_pkg_version["hobot-wifi"]="2.0.0"
 deb_pkg_version["hobot-io"]="2.0.0"
 deb_pkg_version["hobot-io-samples"]="2.0.0"
@@ -436,7 +450,7 @@ function help_msg
 
 
 if [ $# -eq 0 ];then
-    # clear all 
+    # clear all
     rm -rf $debian_dst_dir
     mkdir -p $debian_dst_dir
     # make all

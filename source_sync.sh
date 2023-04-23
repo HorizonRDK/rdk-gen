@@ -46,7 +46,7 @@ o:hobot-camera:HorizonRoboticsRDK/hobot-camera.git:
 o:hobot-configs:HorizonRoboticsRDK/hobot-configs.git:
 o:hobot-dnn:HorizonRoboticsRDK/hobot-dnn.git:
 o:hobot-dtb:HorizonRoboticsRDK/hobot-dtb.git:
-o:hobot-hdmi:HorizonRoboticsRDK/hobot-hdmi.git:
+o:hobot-display:HorizonRoboticsRDK/hobot-display.git:
 o:hobot-io:HorizonRoboticsRDK/hobot-io.git:
 o:hobot-io-samples:HorizonRoboticsRDK/hobot-io-samples.git:
 o:hobot-kernel-headers:HorizonRoboticsRDK/hobot-kernel-headers.git:
