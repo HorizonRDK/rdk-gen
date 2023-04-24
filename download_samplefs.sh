@@ -4,7 +4,7 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-03-24 21:02:31
- # @LastEditTime: 2023-03-24 21:02:44
+ # @LastEditTime: 2023-04-24 11:40:03
 ### 
 
 set -e
@@ -22,7 +22,7 @@ main()
     VERSION_FILE="samplefs_desktop_latest.txt"
 
     # Download the version information file
-    if curl -fs -O "${SERVER_URL}/${VERSION_FILE}"; then
+    if curl -fs -O --connect-timeout 5 "${SERVER_URL}/${VERSION_FILE}"; then
         echo "File ${VERSION_FILE} downloaded successfully"
     else
         echo "File ${VERSION_FILE} downloaded failed"
@@ -44,7 +44,7 @@ main()
         fi
 
         # Download the md5sum file for the file
-        if curl -fs -O "${SERVER_URL}/${FILE_NAME}/${FILE_NAME}.md5sum"; then
+        if curl -fs -O --connect-timeout 5 "${SERVER_URL}/${FILE_NAME}/${FILE_NAME}.md5sum"; then
             echo "File ${FILE_NAME}.md5sum downloaded successfully"
         else
             echo "File ${FILE_NAME}.md5sum downloaded failed"
@@ -56,10 +56,11 @@ main()
 
         # Download the file
         echo "Downloading ${FILE} ..."
-        if curl -f -O "${SERVER_URL}/${FILE_NAME}/${FILE}"; then
+        if curl -f -O --connect-timeout 5 "${SERVER_URL}/${FILE_NAME}/${FILE}"; then
             echo "File ${FILE} downloaded successfully"
         else
             echo "File ${FILE} downloaded failed"
+            rm -f ${FILE}
             return -1
         fi
 
@@ -71,6 +72,7 @@ main()
             echo "File ${FILE} verify successfully"
         else
             echo "File ${FILE} verify failed"
+            rm ${FILE}
             return -1
         fi
     done

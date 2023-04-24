@@ -4,10 +4,10 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-04-15 00:47:08
- # @LastEditTime: 2023-04-17 10:57:12
+ # @LastEditTime: 2023-04-24 12:27:25
 ### 
 
-set -ex
+set -e
 
 export HR_LOCAL_DIR=$(realpath $(cd $(dirname $0); pwd))
 export HR_ROOTFS_PART_NAME="system"

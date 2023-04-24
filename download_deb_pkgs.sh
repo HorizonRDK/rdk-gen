@@ -4,10 +4,10 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-03-15 15:58:13
- # @LastEditTime: 2023-04-06 15:38:14
+ # @LastEditTime: 2023-04-24 12:26:18
 ### 
 
-set -ex
+set -e
 
 main()
 {
@@ -25,7 +25,7 @@ main()
         hobot-models-basic hhp-verify tros \
         hobot-spdev hobot-sp-samples )
 
-    if curl -sfO "${archive_url}/dists/focal/main/binary-arm64/Packages"; then
+    if curl -sfO --connect-timeout 5 "${archive_url}/dists/focal/main/binary-arm64/Packages"; then
         echo "File Packages downloaded successfully"
     else
         echo "File Packages downloaded failed"
@@ -69,8 +69,9 @@ main()
 
         # Download the deb package
         echo "Downloading ${PKG_FILE} ..."
-        if ! wget -q "$PKG_URL"; then
+        if ! curl -fs -O --connect-timeout 5 "$PKG_URL"; then
             echo "Error: Unable to download $pkg_name version $VERSION" >&2
+            rm -f ${PKG_FILE}
             return 1
         fi
     done
