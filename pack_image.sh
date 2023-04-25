@@ -4,7 +4,7 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-04-15 00:47:08
- # @LastEditTime: 2023-04-24 12:27:25
+ # @LastEditTime: 2023-04-24 19:23:45
 ### 
 
 set -e
@@ -189,6 +189,8 @@ function make_ubuntu_image()
     sync
     unmount_image "${IMG_FILE}"
     rm -rf "${ROOTFS_DIR}"
+
+    echo "Make Ubuntu Image successfully"
 
     exit 0
 }
