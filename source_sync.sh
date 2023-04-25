@@ -4,7 +4,7 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2022-12-18 16:06:50
- # @LastEditTime: 2023-04-05 15:57:48
+ # @LastEditTime: 2023-04-25 12:14:22
 ### 
 
 set -e
@@ -158,6 +158,12 @@ function DownloadAndSync {
 			return 1
 		fi
 		git fetch --all 2>&1 >/dev/null
+		local_head=$(git rev-parse HEAD)
+		remote_head=$(git rev-parse @{u})
+		if [[ $local_head != $remote_head ]]; then
+			echo "There are remote updates for $WHAT, pulling latest code..."
+			git pull --ff-only
+		fi
 		popd > /dev/null
 	else
 		echo "Downloading default $WHAT source..."
@@ -182,11 +188,11 @@ function DownloadAndSync {
 	fi
 
 	if [ ! -z "$TAG" ]; then
-		if [ "xmain" == x"$TAG" ]; then
-			# checkout main
+		if [ "xmain" == x"$TAG" ] || [ "xdevelop" == x"$TAG" ]; then
+			# checkout main or develop
 			pushd ${RDK_SOURCE_DIR} > /dev/null
 			echo "Syncing up with branch origin/$TAG..."
-			git checkout main
+			git checkout ${TAG}
 			echo "$2 source sync'ed to branch origin/$TAG successfully!"
 			popd > /dev/null
 		else 
