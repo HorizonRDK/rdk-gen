@@ -345,7 +345,7 @@ function make_debian_deb() {
         mkdir -p $deb_dst_dir/app/
         cp -ar ${debian_src_dir}/${pkg_name}/camera_configs $deb_dst_dir/app/
 
-        mkdir "$deb_dst_dir/usr/bin/"
+        mkdir -p "$deb_dst_dir/usr/bin/"
         cp ${debian_src_dir}/${pkg_name}/camera_configs/common/initweb.sh "$deb_dst_dir/usr/bin/"
         is_allowed=1
         ;;
