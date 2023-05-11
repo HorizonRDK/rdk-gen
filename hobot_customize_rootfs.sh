@@ -98,10 +98,7 @@ EOF
   SUN_PWD="sunrise"
   chroot "${DST_ROOTFS_DIR}" /bin/bash -c "(echo $ROOTPWD;echo $ROOTPWD;) | passwd root"
   chroot "${DST_ROOTFS_DIR}" /bin/bash -c "useradd -U -m -d /home/${SUN_USERNAME} -k /etc/skel/ -s /bin/bash -G sudo,${groups_list//' '/','} ${SUN_USERNAME}"
-  # chroot "${DST_ROOTFS_DIR}" /bin/bash -c "adduser --quiet --disabled-password --shell /bin/bash --ingroup sudo --home /home/${SUN_USERNAME} --gecos ${SUN_USERNAME} ${SUN_USERNAME}"
   chroot "${DST_ROOTFS_DIR}" /bin/bash -c "(echo ${SUN_PWD};echo ${SUN_PWD};) | passwd ${SUN_USERNAME}"
-  # chroot "${DST_ROOTFS_DIR}" /bin/bash -c "usermod -aG sudo,${groups_list//' '/','} ${SUN_USERNAME} || true"
 
   chroot "${DST_ROOTFS_DIR}" /bin/bash -c "cp -aRf /etc/skel/. /root/"
-  # chroot "${DST_ROOTFS_DIR}" /bin/bash -c "chown sunrise:sunrise -R /home/${SUN_USERNAME}/"
 }
