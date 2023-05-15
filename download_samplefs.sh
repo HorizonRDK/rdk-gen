@@ -4,7 +4,7 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-03-24 21:02:31
- # @LastEditTime: 2023-04-24 11:40:03
+ # @LastEditTime: 2023-05-15 14:35:12
 ### 
 
 set -e
@@ -68,10 +68,10 @@ main()
         DOWNLOADED_MD5SUM=$(md5sum "${FILE}" | awk '{print $1}')
 
         # Verify the md5sum value of the downloaded file
-        if [[ "$FILE_MD5SUM" == "$DOWNLOADED_MD5SUM" ]]; then
+        if [[ "${FILE_MD5SUM}" == "${DOWNLOADED_MD5SUM}" ]]; then
             echo "File ${FILE} verify successfully"
         else
-            echo "File ${FILE} verify failed"
+            echo "File ${FILE} verify md5sum failed, Expected to be ${FILE_MD5SUM}, actually ${DOWNLOADED_MD5SUM}"
             rm ${FILE}
             return -1
         fi
