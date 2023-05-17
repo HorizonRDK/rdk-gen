@@ -4,7 +4,7 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-03-15 15:58:13
- # @LastEditTime: 2023-04-24 12:26:18
+ # @LastEditTime: 2023-05-15 14:50:53
 ### 
 
 set -e
@@ -49,7 +49,10 @@ main()
     do
         # Get the latest version number from the Packages file
         VERSION=$(cat Packages | awk -v pkg=${pkg_name} '$1 == "Package:" && $2 == pkg {getline; print}' | awk '{print $2}' | sort -V | tail -n1)
-        FILENAME=$(grep -A 10 -E "^Package: ${pkg_name}$" Packages | grep '^Filename: ' | cut -d ' ' -f 2 | sort -V | tail -n1)
+        FILENAME=$(grep -A 10 -E "^Package: ${pkg_name}$" Packages | grep -A 9 -B 1 -E "Version: ${VERSION}$" | grep '^Filename: ' | cut -d ' ' -f 2 | sort -V | tail -n1)
+        MD5SUM=$(grep -A 10 -B 1 -E "Package: ${pkg_name}$" Packages | grep -A 9 -B 1 -E "Version: ${VERSION}$" | grep '^MD5sum: ' | cut -d ' ' -f 2 | sort -V | tail -n1)
+
+        # echo "Package: ${pkg_name} Version: ${VERSION} FILENAME: ${FILENAME} MD5SUM: ${MD5SUM}"
 
         if [[ -z "$VERSION" ]]; then
             echo "Error: Unable to retrieve version number for $pkg_name" >&2
@@ -86,6 +89,18 @@ main()
             echo "Error: Unable to download $pkg_name version $VERSION" >&2
             rm -f ${PKG_FILE}
             return 1
+        fi
+
+        # Calculate the md5sum of the downloaded file
+        DOWNLOADED_MD5SUM=$(md5sum "${PKG_FILE}" | awk '{print $1}')
+
+        # Verify the md5sum value of the downloaded file
+        if [[ "${MD5SUM}" == "${DOWNLOADED_MD5SUM}" ]]; then
+            echo "File ${PKG_FILE} verify successfully"
+        else
+            echo "File ${PKG_FILE} verify md5sum failed, Expected to be ${MD5SUM}, actually ${DOWNLOADED_MD5SUM}"
+            rm ${PKG_FILE}
+            return -1
         fi
     done
 }
