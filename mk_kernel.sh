@@ -141,7 +141,7 @@ function build_all()
     [ ! -d $KO_INSTALL_DIR ] && mkdir -p $KO_INSTALL_DIR
     rm -rf $KO_INSTALL_DIR/*
 
-    make INSTALL_MOD_PATH=$KO_INSTALL_DIR INSTALL_MOD_STRIP=1 modules_install || {
+    make INSTALL_MOD_PATH=$KO_INSTALL_DIR INSTALL_MOD_STRIP=1 modules_install -j${N} || {
         echo "make modules_install to INSTALL_MOD_PATH for release ko failed"
         exit 1
     }
