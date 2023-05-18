@@ -22,7 +22,7 @@ main()
         hobot-display hobot-wifi \
         hobot-io hobot-io-samples \
         hobot-multimedia hobot-multimedia-dev hobot-camera hobot-dnn \
-        hobot-models-basic hhp-verify tros \
+        hobot-models-basic tros \
         hobot-spdev hobot-sp-samples \
         tros-ros-base tros-ai-msgs \
         tros-audio-control tros-audio-msg tros-audio-tracking \
