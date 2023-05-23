@@ -4,13 +4,12 @@
  # Copyright 2023 Horizon Robotics, Inc.
  # All rights reserved.
  # @Date: 2023-04-15 00:47:08
- # @LastEditTime: 2023-04-24 19:23:45
+ # @LastEditTime: 2023-05-23 16:56:41
 ### 
 
 set -e
 
 export HR_LOCAL_DIR=$(realpath $(cd $(dirname $0); pwd))
-export HR_ROOTFS_PART_NAME="system"
 
 this_user="$(whoami)"
 if [ "${this_user}" != "root" ]; then
@@ -23,7 +22,7 @@ fi
 export IMAGE_DEPLOY_DIR=${HR_LOCAL_DIR}/deploy
 [ ! -z ${IMAGE_DEPLOY_DIR} ] && [ ! -d $IMAGE_DEPLOY_DIR ] && mkdir $IMAGE_DEPLOY_DIR
 
-IMG_FILE="${IMAGE_DEPLOY_DIR}/${HR_ROOTFS_PART_NAME}_sdcard.img"
+IMG_FILE="${IMAGE_DEPLOY_DIR}/ubuntu-preinstalled-desktop-arm64.img"
 
 ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs
 ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs
@@ -189,6 +188,8 @@ function make_ubuntu_image()
     sync
     unmount_image "${IMG_FILE}"
     rm -rf "${ROOTFS_DIR}"
+
+    md5sum "${IMG_FILE}" > ${IMG_FILE}.md5sum
 
     echo "Make Ubuntu Image successfully"
 
