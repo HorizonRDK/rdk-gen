@@ -82,7 +82,7 @@ libboost-dev libboost-date-time-dev libboost-thread-dev \
 python3-wstool ninja-build stow \
 libgoogle-glog-dev libgflags-dev libatlas-base-dev libeigen3-dev libsuitesparse-dev \
 lua5.2 liblua5.2-dev libluabind-dev libprotobuf-dev protobuf-compiler libcairo2-dev \
-hostapd dnsmasq isc-dhcp-server x11vnc fuse ntfs-3g "
+hostapd dnsmasq isc-dhcp-server x11vnc fuse ntfs-3g libtinyxml-dev "
 
 DESKTOP_PACKAGE_LIST="xubuntu-desktop xserver-xorg-video-fbdev policykit-1-gnome notification-daemon \
 tightvncserver network-manager-gnome xfce4-terminal tightvncserver firefox firefox-locale-zh-hans \
@@ -109,7 +109,7 @@ fonts-noto-cjk-extra fcitx-sunpinyin hunspell-en-gb fcitx-frontend-gtk2 fcitx-ui
 language-pack-gnome-zh-hans language-pack-gnome-zh-hans-base language-pack-gnome-zh-hant language-pack-gnome-zh-hant-base \
 fcitx-chewing fcitx-table-cangjie firefox-locale-zh-hant \
 smplayer pavucontrol pulseaudio \
-libvulkan1 mesa-vulkan-drivers "
+libvulkan1 mesa-vulkan-drivers libtinyxml-dev "
 
 # The default version is Ubuntu Desktop
 ADD_PACKAGE_LIST="${BASE_PACKAGE_LIST} ${SERVER_PACKAGE_LIST} ${DESKTOP_PACKAGE_LIST} "
