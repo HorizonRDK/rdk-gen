@@ -21,7 +21,8 @@ main()
         hobot-configs hobot-utils \
         hobot-display hobot-wifi \
         hobot-io hobot-io-samples \
-        hobot-multimedia hobot-multimedia-dev hobot-camera hobot-dnn \
+        hobot-multimedia hobot-multimedia-dev hobot-multimedia-samples \
+        hobot-camera hobot-dnn \
         hobot-models-basic tros \
         hobot-spdev hobot-sp-samples \
         tros-ros-base tros-ai-msgs \
