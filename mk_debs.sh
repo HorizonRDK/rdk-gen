@@ -422,7 +422,7 @@ function make_debian_deb() {
 }
 
 declare -A deb_pkg_version
-deb_pkg_version["hobot-boot"]="2.0.0"
+deb_pkg_version["hobot-boot"]="2.0.1"
 deb_pkg_version["hobot-kernel-headers"]="2.0.0"
 deb_pkg_version["hobot-dtb"]="2.0.0"
 deb_pkg_version["hobot-bpu-drivers"]="2.0.0"
@@ -431,13 +431,13 @@ deb_pkg_version["hobot-utils"]="2.0.0"
 deb_pkg_version["hobot-display"]="2.0.0"
 deb_pkg_version["hobot-wifi"]="2.0.0"
 deb_pkg_version["hobot-io"]="2.0.0"
-deb_pkg_version["hobot-io-samples"]="2.0.0"
-deb_pkg_version["hobot-multimedia"]="2.0.0"
+deb_pkg_version["hobot-io-samples"]="2.0.1"
+deb_pkg_version["hobot-multimedia"]="2.0.1"
 deb_pkg_version["hobot-multimedia-dev"]="2.0.0"
-deb_pkg_version["hobot-camera"]="2.0.0"
-deb_pkg_version["hobot-dnn"]="2.0.0"
-deb_pkg_version["hobot-spdev"]="2.0.0"
-deb_pkg_version["hobot-sp-samples"]="2.0.0"
+deb_pkg_version["hobot-camera"]="2.1.0"
+deb_pkg_version["hobot-dnn"]="2.1.0"
+deb_pkg_version["hobot-spdev"]="2.1.0"
+deb_pkg_version["hobot-sp-samples"]="2.1.0"
 deb_pkg_version["hobot-multimedia-samples"]="2.0.0"
 
 function help_msg
