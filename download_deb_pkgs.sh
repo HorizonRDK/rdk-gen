@@ -23,21 +23,23 @@ main()
         hobot-io hobot-io-samples \
         hobot-multimedia hobot-multimedia-dev hobot-multimedia-samples \
         hobot-camera hobot-dnn \
-        hobot-models-basic tros \
         hobot-spdev hobot-sp-samples \
-        tros-ros-base tros-ai-msgs \
-        tros-audio-control tros-audio-msg tros-audio-tracking \
+        hobot-models-basic \
+        tros \
+        tros-ai-msgs tros-audio-control tros-audio-msg tros-audio-tracking \
         tros-body-tracking tros-dnn-benchmark-example \
-        tros-dnn-node tros-dnn-node-example tros-dnn-node-sample \
-        tros-elevation-net tros-gesture-control tros-hand-gesture-detection \
-        tros-hand-lmk-detection tros-hbm-img-msgs tros-hobot-app-xrrobot-body-tracking \
-        tros-hobot-app-xrrobot-gesture-control tros-hobot-codec tros-hobot-cv \
-        tros-hobot-falldown-detection tros-hobot-hdmi tros-hobot-image-publisher \
-        tros-hobot-mot tros-hobot-usb-cam tros-image-subscribe-example tros-img-msgs \
-        tros-imu-sensor tros-line-follower-model tros-line-follower-perception \
-        tros-mipi-cam tros-mono2d-body-detection tros-mono2d-trash-detection \
+        tros-dnn-node tros-dnn-node-example tros-dnn-node-sample tros-elevation-net \
+        tros-gesture-control tros-hand-gesture-detection tros-hand-lmk-detection \
+        tros-hbm-img-msgs tros-hobot-app-xrrobot-body-tracking \
+        tros-hobot-app-xrrobot-gesture-control tros-hobot-audio tros-hobot-codec tros-hobot-cv \
+        tros-hobot-falldown-detection tros-hobot-hdmi \
+        tros-hobot-image-publisher tros-hobot-mot tros-hobot-tts tros-hobot-usb-cam \
+        tros-hobot-vio tros-hobot-visualization tros-img-msgs tros-imu-sensor \
+        tros-line-follower-model tros-line-follower-perception tros-mipi-cam \
+        tros-mono2d-body-detection tros-mono2d-trash-detection \
         tros-mono3d-indoor-detection tros-parking-perception tros-parking-search \
-        tros-rgbd-sensor tros-websocket tros-xrrobot tros-xrrobot-msgs )
+        tros-recorder-node tros-rgbd-sensor tros-ros-base tros-trigger-node \
+        tros-trigger-node-example tros-websocket tros-xrrobot tros-xrrobot-msgs )
 
     if curl -sfO --connect-timeout 5 "${archive_url}/dists/focal/main/binary-arm64/Packages"; then
         echo "File Packages downloaded successfully"
