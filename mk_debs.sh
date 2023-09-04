@@ -424,7 +424,7 @@ function make_debian_deb() {
 declare -A deb_pkg_version
 deb_pkg_version["hobot-boot"]="2.0.2"
 deb_pkg_version["hobot-kernel-headers"]="2.0.0"
-deb_pkg_version["hobot-dtb"]="2.0.0"
+deb_pkg_version["hobot-dtb"]="2.0.1"
 deb_pkg_version["hobot-bpu-drivers"]="2.0.0"
 deb_pkg_version["hobot-configs"]="2.0.0"
 deb_pkg_version["hobot-utils"]="2.0.0"
