@@ -404,6 +404,16 @@ function make_debian_deb() {
 
         is_allowed=1
         ;;
+    hobot-miniboot)
+        pkg_description="RDK Miniboot updater"
+
+        gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
+
+        # set Depends
+        sed -i 's/Depends: .*$/Depends: /' ${deb_dst_dir}/DEBIAN/control
+
+        is_allowed=1
+        ;;
     *)
         echo "Error: Make package ${pkg_name}-${pkg_version} failed"
         is_allowed=0
@@ -439,6 +449,7 @@ deb_pkg_version["hobot-dnn"]="2.1.0"
 deb_pkg_version["hobot-spdev"]="2.1.1"
 deb_pkg_version["hobot-sp-samples"]="2.1.0"
 deb_pkg_version["hobot-multimedia-samples"]="2.0.0"
+deb_pkg_version["hobot-miniboot"]="2.0.0"
 
 function help_msg
 {
