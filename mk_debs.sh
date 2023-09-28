@@ -109,9 +109,33 @@ function calc_installed_size()
 debian_src_dir="${HR_LOCAL_DIR}/source"
 debian_dst_dir="${IMAGE_DEPLOY_DIR}/deb_pkgs"
 
+function get_version() {
+  if [ $# -ne 1 ]; then
+    echo "Usage: get_version <directory_path>"
+    return 1
+  fi
+
+  local dir_path="$1"
+  local version_file="$dir_path/VERSION"
+
+  if [ ! -d "$dir_path" ]; then
+    echo "Error: Directory '$dir_path' does not exist."
+    return 1
+  fi
+
+  if [ ! -f "$version_file" ]; then
+    echo "Error: VERSION file not found in '$dir_path'."
+    return 1
+  fi
+
+  local version=$(cat "$version_file")
+  echo "$version"
+}
+
+
 function make_debian_deb() {
     pkg_name=${1}
-    pkg_version=${2}-${pkg_build_time}
+    pkg_version=$(get_version ${debian_src_dir}/${pkg_name})-${pkg_build_time}
 
     #命名规范：hobot-包名_版本_架构
     deb_name=${pkg_name}_${pkg_version}_${ARCH}
@@ -421,30 +445,31 @@ function make_debian_deb() {
     fi
 }
 
-declare -A deb_pkg_version
-deb_pkg_version["hobot-boot"]="2.0.2"
-deb_pkg_version["hobot-kernel-headers"]="2.0.0"
-deb_pkg_version["hobot-dtb"]="2.0.1"
-deb_pkg_version["hobot-bpu-drivers"]="2.0.0"
-deb_pkg_version["hobot-configs"]="2.0.0"
-deb_pkg_version["hobot-utils"]="2.0.0"
-deb_pkg_version["hobot-display"]="2.0.0"
-deb_pkg_version["hobot-wifi"]="2.0.0"
-deb_pkg_version["hobot-io"]="2.0.0"
-deb_pkg_version["hobot-io-samples"]="2.0.1"
-deb_pkg_version["hobot-multimedia"]="2.0.1"
-deb_pkg_version["hobot-multimedia-dev"]="2.0.0"
-deb_pkg_version["hobot-camera"]="2.2.0"
-deb_pkg_version["hobot-dnn"]="2.1.1"
-deb_pkg_version["hobot-spdev"]="2.1.1"
-deb_pkg_version["hobot-sp-samples"]="2.1.0"
-deb_pkg_version["hobot-multimedia-samples"]="2.0.0"
+deb_pkg_list=(
+    "hobot-boot"
+    "hobot-kernel-headers"
+    "hobot-dtb"
+    "hobot-bpu-drivers"
+    "hobot-configs"
+    "hobot-utils"
+    "hobot-display"
+    "hobot-wifi"
+    "hobot-io"
+    "hobot-io-samples"
+    "hobot-multimedia"
+    "hobot-multimedia-dev"
+    "hobot-camera"
+    "hobot-dnn"
+    "hobot-spdev"
+    "hobot-sp-samples"
+    "hobot-multimedia-samples"
+)
 
 function help_msg
 {
     echo "./mk_deb.sh [all] | [deb_name]"
-    for pkg_name in "${!deb_pkg_version[@]}"; do
-        echo "    ${pkg_name}, Version ${deb_pkg_version[${pkg_name}]}"
+    for pkg_name in ""${deb_pkg_list[@]}""; do
+        echo "    ${pkg_name}"
     done
 }
 
@@ -454,18 +479,25 @@ if [ $# -eq 0 ];then
     rm -rf $debian_dst_dir
     mkdir -p $debian_dst_dir
     # make all
-    for pkg_name in "${!deb_pkg_version[@]}"; do
-        echo "Make package ${pkg_name}, Version ${deb_pkg_version[${pkg_name}]}"
-        make_debian_deb ${pkg_name} ${deb_pkg_version[${pkg_name}]}
+    for pkg_name in "${deb_pkg_list[@]}"; do
+        echo "Make package ${pkg_name}"
+        make_debian_deb ${pkg_name}
     done
 elif [ $# -eq 1 ];then
     key_name=${1}
-    if [[ "${!deb_pkg_version[@]}" =~ ${key_name} ]]; then
-        mkdir -p $debian_dst_dir
-        echo "Make package ${key_name}, version ${deb_pkg_version[${key_name}]}"
-        make_debian_deb ${key_name} ${deb_pkg_version[${key_name}]}
-    else
-        echo "The debian package named by ${key_name} is not supported, please check the input parameters."
+    found=false
+    for pkg_name in "${deb_pkg_list[@]}"; do
+        if [[ "${pkg_name}" == "${key_name}" ]]; then
+            found=true
+            mkdir -p $debian_dst_dir
+            echo "Make package ${pkg_name}"
+            make_debian_deb ${pkg_name}
+            break
+        fi
+    done
+
+    if ! $found; then
+        echo "The debian package named by '${key_name}' is not supported, please check the input parameters."
         help_msg
     fi
 else
