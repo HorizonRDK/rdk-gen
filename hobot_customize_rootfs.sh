@@ -12,6 +12,7 @@ function hobot_customize_rootfs()
   # Configure hostname
   HOST="ubuntu"
   echo "$HOST" > ${DST_ROOTFS_DIR}/etc/hostname
+  echo "127.0.1.1		${HOST}" >> "${DST_ROOTFS_DIR}/etc/hosts"
 
   # Configure ssh
   # permit root login via SSH for the first boot
