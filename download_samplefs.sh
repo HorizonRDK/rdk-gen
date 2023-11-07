@@ -16,7 +16,7 @@ main()
     cd ${rootfs_dir}
 
     # Set the URL of the file server
-    SERVER_URL="http://archive.sunrisepi.tech/samplefs"
+    SERVER_URL="http://sunrise.horizon.cc/samplefs"
 
     # Set the name of the file that records the latest version information
     VERSION_FILE="samplefs_desktop_latest.txt"
