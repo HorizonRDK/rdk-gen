@@ -16,127 +16,52 @@ UBUNTU_MIRROR="mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/"
 # To use a local proxy to cache apt packages, you need to install apt-cacher-ng
 apt_mirror="http://localhost:3142/${UBUNTU_MIRROR}"
 
-COMMON_PACKAGE_LIST=" "
 PYTHON_PACKAGE_LIST="numpy opencv-python pySerial i2cdev spidev matplotlib pillow \
 websocket websockets lark-parser netifaces google protobuf==3.20.1 "
 
-#DEBOOTSTRAP_LIST="systemd sudo locales apt-utils openssh-server ssh dbus init module-init-tools \
-DEBOOTSTRAP_LIST="systemd sudo vim locales apt-utils openssh-server ssh dbus init \
-strace kmod init udev bash-completion netbase network-manager \
-ifupdown ethtool net-tools iputils-ping "
+DEBOOTSTRAP_LIST="systemd sudo locales apt-utils init dbus kmod udev bash-completion "
 
-BASE_PACKAGE_LIST="file openssh-server ssh bsdmainutils whiptail device-tree-compiler \
-bzip2 htop rsyslog parted python3 python3-pip console-setup fake-hwclock \
-ncurses-term gcc g++ toilet sysfsutils rsyslog tzdata u-boot-tools \
-libcjson1 libcjson-dev db-util diffutils e2fsprogs libc6 xterm \
-libcrypt1 libcrypto++6 libdevmapper1.02.1 libedit2 libgcc-s1-arm64-cross libgcrypt20 libgpg-error0 \
-libion0 libjsoncpp1 libkcapi1 libmenu-cache3 libnss-db libpcap0.8 libpcre3 \
-libstdc++-10-dev libvorbis0a libzmq5 lvm2 makedev mtd-utils ncurses-term ncurses-base nettle-bin \
-nfs-common openssl perl-base perl tftpd-hpa tftp-hpa tzdata watchdog \
-wpasupplicant alsa-utils base-files cryptsetup diffutils dosfstools \
-dropbear e2fsprogs ethtool exfat-utils ffmpeg i2c-tools iperf3 \
-libaio1 libasound2 libattr1 libavcodec58 libavdevice58 libavfilter7 libavformat58 libavutil56 \
-libblkid1 libc6 libc6-dev libcap2 libcom-err2 libcrypt-dev libdbus-1-3 libexpat1 libext2fs2 libflac8 \
-libgcc1 libgdbm-compat4 libgdbm-dev libgdbm6 libgmp10 libgnutls30 libidn2-0 libjson-c4 libkmod2 \
-liblzo2-2 libmount1 libncurses5 libncursesw5 libnl-3-200 libnl-genl-3-200 libogg0 libpopt0 \
-libpostproc55 libreadline8 libsamplerate0 libsndfile1 libss2 libssl1.1 libstdc++6 libswresample3 \
-libswscale5 libtinfo5 libtirpc3 libudev1 libunistring2 libusb-1.0-0 libuuid1 libwrap0 libx11-6 \
-libxau6 libxcb1 libxdmcp6 libxext6 libxv1 libz-dev libz1 lrzsz lvm2 mtd-utils net-tools \
-netbase openssh-sftp-server openssl rpcbind screen sysstat tcpdump libgl1-mesa-glx \
-thin-provisioning-tools trace-cmd tzdata usbutils watchdog libturbojpeg libturbojpeg0-dev \
-base-passwd libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libcrypto++-dev \
-libjsoncpp-dev libssl-dev libswresample-dev libzmq3-dev perl sed \
-symlinks libunwind8 libperl-dev devmem2 ifmetric v4l-utils python3-dev \
-build-essential libbullet-dev libasio-dev libtinyxml2-dev iotop htop iw wireless-tools \
-bluetooth bluez blueman sqlite3 libsqlite3-dev libeigen3-dev liblog4cxx-dev libcurl4-openssl-dev \
-libboost-dev libboost-date-time-dev libboost-thread-dev \
-libwhoopsie-preferences0 libwhoopsie0 whoopsie whoopsie-preferences \
-distro-info ubuntu-advantage-tools python3-click python3-colorama "
-
-SERVER_PACKAGE_LIST="file openssh-server ssh bsdmainutils rfkill whiptail device-tree-compiler \
-bzip2 htop rsyslog make cmake parted python3 python3-pip console-setup fake-hwclock \
-ncurses-term gcc g++ toilet sysfsutils rsyslog tzdata u-boot-tools \
-libcjson1 libcjson-dev db-util diffutils e2fsprogs iptables libc6 xterm \
-libcrypt1 libcrypto++6 libdevmapper1.02.1 libedit2 libgcc-s1-arm64-cross libgcrypt20 libgpg-error0 \
-libion0 libjsoncpp1 libkcapi1 libmenu-cache3 libnss-db libpcap0.8 libpcre3 \
-libstdc++-10-dev libvorbis0a libzmq5 lvm2 makedev mtd-utils ncurses-term ncurses-base nettle-bin \
-nfs-common openssl perl-base perl tftpd-hpa tftp-hpa tzdata watchdog \
-wpasupplicant alsa-utils base-files cryptsetup diffutils dosfstools \
-dropbear e2fsprogs ethtool exfat-utils ffmpeg file gdb gdbserver i2c-tools iperf3 iptables \
-libaio1 libasound2 libattr1 libavcodec58 libavdevice58 libavfilter7 libavformat58 libavutil56 \
-libblkid1 libc6 libc6-dev libcap2 libcom-err2 libcrypt-dev libdbus-1-3 libexpat1 libext2fs2 libflac8 \
-libgcc1 libgdbm-compat4 libgdbm-dev libgdbm6 libgmp10 libgnutls30 libidn2-0 libjson-c4 libkmod2 \
-liblzo2-2 libmount1 libncurses5 libncursesw5 libnl-3-200 libnl-genl-3-200 libogg0 libpopt0 \
-libpostproc55 libreadline8 libsamplerate0 libsndfile1 libss2 libssl1.1 libstdc++6 libswresample3 \
-libswscale5 libtinfo5 libtirpc3 libudev1 libunistring2 libusb-1.0-0 libuuid1 libwrap0 libx11-6 \
-libxau6 libxcb1 libxdmcp6 libxext6 libxv1 libz-dev libz1 lrzsz lvm2 mtd-utils net-tools \
-netbase openssh-sftp-server openssl rpcbind screen sysstat tcpdump libgl1-mesa-glx \
-thin-provisioning-tools trace-cmd tzdata usbutils watchdog libturbojpeg libturbojpeg0-dev \
-base-passwd libasound2-dev libavcodec-dev libavformat-dev libavutil-dev libcrypto++-dev \
-libjsoncpp-dev libssl-dev libswresample-dev libzmq3-dev perl sed \
-symlinks libunwind8 libperl-dev devmem2 tree unzip ifmetric v4l-utils python3-dev \
-wget curl gnupg2 lsb-release lshw lsof memstat aptitude apt-show-versions \
-build-essential libbullet-dev libasio-dev libtinyxml2-dev iotop htop iw wireless-tools \
-bluetooth bluez blueman sqlite3 libsqlite3-dev libeigen3-dev liblog4cxx-dev libcurl4-openssl-dev \
-libboost-dev libboost-date-time-dev libboost-thread-dev \
-python3-wstool ninja-build stow \
-libgoogle-glog-dev libgflags-dev libatlas-base-dev libeigen3-dev libsuitesparse-dev \
-lua5.2 liblua5.2-dev libluabind-dev libprotobuf-dev protobuf-compiler libcairo2-dev \
-hostapd dnsmasq isc-dhcp-server x11vnc fuse ntfs-3g libtinyxml-dev "
-
-DESKTOP_PACKAGE_LIST="xubuntu-desktop xserver-xorg-video-fbdev policykit-1-gnome notification-daemon \
-tightvncserver network-manager-gnome xfce4-terminal tightvncserver firefox firefox-locale-zh-hans \
-gedit \
-language-pack-zh-hans language-pack-zh-hans-base language-pack-en language-pack-en-base \
-fonts-beng \
-fonts-beng-extra fonts-deva fonts-deva-extra fonts-freefont-ttf fonts-gargi fonts-gubbi fonts-gujr fonts-gujr-extra fonts-guru fonts-guru-extra \
-fonts-indic fonts-kacst fonts-kacst-one fonts-kalapi fonts-khmeros-core fonts-knda fonts-lao fonts-liberation fonts-lklug-sinhala \
-fonts-lohit-beng-assamese fonts-lohit-beng-bengali fonts-lohit-deva fonts-lohit-gujr fonts-lohit-guru fonts-lohit-knda fonts-lohit-mlym \
-fonts-lohit-orya fonts-lohit-taml fonts-lohit-taml-classical fonts-lohit-telu fonts-mlym fonts-nakula fonts-navilu fonts-noto-cjk \
-fonts-noto-core fonts-noto-hinted fonts-noto-ui-core fonts-orya fonts-orya-extra fonts-pagul fonts-sahadeva fonts-samyak-deva fonts-samyak-gujr \
-fonts-samyak-mlym fonts-samyak-taml fonts-sarai fonts-sil-abyssinica fonts-sil-padauk fonts-smc fonts-smc-anjalioldlipi fonts-smc-chilanka \
-fonts-smc-dyuthi fonts-smc-gayathri fonts-smc-karumbi fonts-smc-keraleeyam fonts-smc-manjari fonts-smc-meera fonts-smc-rachana \
-fonts-smc-raghumalayalamsans fonts-smc-suruma fonts-smc-uroob fonts-symbola fonts-taml fonts-telu fonts-telu-extra fonts-thai-tlwg \
-fonts-tibetan-machine fonts-tlwg-garuda fonts-tlwg-garuda-ttf fonts-tlwg-kinnari fonts-tlwg-kinnari-ttf fonts-tlwg-laksaman \
-fonts-tlwg-laksaman-ttf fonts-tlwg-loma fonts-tlwg-loma-ttf fonts-tlwg-mono fonts-tlwg-mono-ttf fonts-tlwg-norasi fonts-tlwg-norasi-ttf \
-fonts-tlwg-purisa fonts-tlwg-purisa-ttf fonts-tlwg-sawasdee fonts-tlwg-sawasdee-ttf fonts-tlwg-typewriter fonts-tlwg-typewriter-ttf \
-fonts-tlwg-typist fonts-tlwg-typist-ttf fonts-tlwg-typo fonts-tlwg-typo-ttf fonts-tlwg-umpush fonts-tlwg-umpush-ttf fonts-tlwg-waree \
-fonts-tlwg-waree-ttf fonts-ubuntu fonts-yrsa-rasa fonts-arphic-ukai fonts-arphic-gkai00mp fonts-arphic-bkai00mp xfonts-wqy ttf-wqy-microhei ttf-wqy-zenhei \
-ibus-rime librime-data-wubi librime-data-pinyin-simp librime-data-stroke-simp \
-fcitx wbritish firefox-locale-en fonts-arphic-ukai fcitx-module-cloudpinyin fonts-arphic-uming hunspell-en-ca \
-fcitx-table-wubi hunspell-en-za wamerican hunspell-en-au fcitx-frontend-gtk3 fcitx-ui-qimpanel fcitx-pinyin \
-fonts-noto-cjk-extra fcitx-sunpinyin hunspell-en-gb fcitx-frontend-gtk2 fcitx-ui-classic hunspell-en-us fcitx-frontend-qt5 \
-language-pack-gnome-zh-hans language-pack-gnome-zh-hans-base language-pack-gnome-zh-hant language-pack-gnome-zh-hant-base \
-fcitx-chewing fcitx-table-cangjie firefox-locale-zh-hant \
-smplayer pavucontrol pulseaudio \
-libvulkan1 mesa-vulkan-drivers libtinyxml-dev "
+get_package_list()
+{
+    package_list_file="${LOCAL_DIR}/ubuntu-${RELEASE}-${1}-${ARCH}-packages"
+    if [ ! -f "${package_list_file}" ]; then
+        echo "ERROR: package list file - ${package_list_file} not found" > /dev/stderr
+        exit 1
+    fi
+    PACKAGE_LIST=$(cat ${package_list_file} | sed ':a;N;$!ba;s/\n/ /g')
+    echo ${PACKAGE_LIST}
+}
 
 # The default version is Ubuntu Desktop
-ADD_PACKAGE_LIST="${BASE_PACKAGE_LIST} ${SERVER_PACKAGE_LIST} ${DESKTOP_PACKAGE_LIST} "
-
+ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") $(get_package_list "desktop") "
 ubuntufs_src="${LOCAL_DIR}/desktop"
+samplefs_version="v2.1.0"
 
 # Ubuntu Desktop
-if [[ $1 == *"d"*  ]] ; then
-    desktop="true"
-    ADD_PACKAGE_LIST="${BASE_PACKAGE_LIST} ${SERVER_PACKAGE_LIST} ${DESKTOP_PACKAGE_LIST} "
+if [[ $1 == "d"*  ]] ; then
+    ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") $(get_package_list "desktop") "
     ubuntufs_src="${LOCAL_DIR}/desktop"
+    tar_file=${ubuntufs_src}/samplefs_desktop-${samplefs_version}.tar.gz
 fi
 
 # Ubuntu Server
-if [[ $1 == *"s"*  ]] ; then
-    ADD_PACKAGE_LIST="${BASE_PACKAGE_LIST} ${SERVER_PACKAGE_LIST}"
+if [[ $1 == "s"*  ]] ; then
+    ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") "
     ubuntufs_src="${LOCAL_DIR}/server"
+    tar_file=${ubuntufs_src}/samplefs_server-${samplefs_version}.tar.gz
 fi
 
 # Ubuntu Base
-if [[ $1 == *"b"*  ]] ; then
-    ADD_PACKAGE_LIST="${BASE_PACKAGE_LIST} "
+if [[ $1 == "b"*  ]] ; then
+    ADD_PACKAGE_LIST="$(get_package_list "base") "
     ubuntufs_src="${LOCAL_DIR}/base"
+    tar_file=${ubuntufs_src}/samplefs_base-${samplefs_version}.tar.gz
 fi
 
+echo "Make ${tar_file}"
+echo ${ADD_PACKAGE_LIST}
+
 root_path=${ubuntufs_src}/${RELEASE}-xj3-${ARCH}
-tar_file=${ubuntufs_src}/samplefs_desktop-v2.0.0.tar.gz
 
 # Release specific packages
 case $RELEASE in
@@ -308,6 +233,29 @@ check_ret(){
     fi
 }
 
+install_package()
+{
+    retry=0
+    retry_max=5
+
+    echo "Install ${1}"
+    while true
+    do
+        eval 'LC_ALL=C LANG=C chroot ${dst_dir} /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y $apt_extra --no-install-recommends install ${1}"'
+        if [[ $? -eq 0 ]]; then
+            return 0
+        else
+            retry=$( expr $retry + 1 )
+            if [ "${retry}" == "${retry_max}" ]; then
+                return 1
+            else
+                sleep 1
+                echo "Retrying ${1} package install"
+            fi
+        fi
+    done
+}
+
 make_base_root() {
     local dst_dir=$1
     rm -rf $dst_dir
@@ -354,9 +302,16 @@ make_base_root() {
     eval 'LC_ALL=C LANG=C chroot ${dst_dir} /bin/bash -c "apt-get -q -y $apt_extra upgrade"'
     [[ $? -ne 0 ]] && exit -1
     log_out "Installing base packages" "${dst_dir}" "info"
-    eval 'LC_ALL=C LANG=C chroot ${dst_dir} /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y -q $apt_extra --no-install-recommends install $ADD_PACKAGE_LIST"'
-    [[ $? -ne 0 ]] && exit -1
-    chroot ${dst_dir} /bin/bash -c "dpkg --get-selections" | grep -v deinstall | awk '{print $1}' | cut -f1 -d':' > ${tar_file}.info
+    package_list=$(echo "${ADD_PACKAGE_LIST}")
+    if [ ! -z "${package_list}" ]; then
+        for package in ${package_list}
+        do
+            if ! install_package "${package}"; then
+                echo "ERROR: Failed to install ${package}"
+                exit -1
+            fi
+        done
+    fi
 
     # Fixed GCC version: 9.3.0
     chroot ${dst_dir} /bin/bash -c "apt-mark hold cpp-9 g++-9 gcc-9-base gcc-9 libasan5 libgcc-9-dev libstdc++-9-dev"
@@ -370,13 +325,29 @@ make_base_root() {
     eval 'LC_ALL=C LANG=C chroot ${dst_dir} /bin/bash -c "apt-get -q -y $apt_extra upgrade"'
     [[ $? -ne 0 ]] && exit -1
     log_out "Installing base packages" "${dst_dir}" "info"
-    eval 'LC_ALL=C LANG=C chroot ${dst_dir} /bin/bash -c "DEBIAN_FRONTEND=noninteractive apt-get -y -q $apt_extra --no-install-recommends install $ADD_PACKAGE_LIST"'
-    [[ $? -ne 0 ]] && exit -1
-    chroot ${dst_dir} /bin/bash -c "dpkg --get-selections" | grep -v deinstall | awk '{print $1}' | cut -f1 -d':' > ${tar_file}.info
+    package_list=$(echo "${ADD_PACKAGE_LIST}")
+    if [ ! -z "${package_list}" ]; then
+        for package in ${package_list}
+        do
+            if ! install_package "${package}"; then
+                echo "ERROR: Failed to install ${package}"
+                exit -1
+            fi
+        done
+    fi
+    chroot ${dst_dir} /bin/bash -c "dpkg --get-selections" | grep -v deinstall | awk '{print $1}' | cut -f1 -d':' | sort > ${tar_file}.info
 
     chroot ${dst_dir} /bin/bash -c "pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple"
     chroot ${dst_dir} /bin/bash -c "pip3 config set install.trusted-host https://pypi.tuna.tsinghua.edu.cn"
     chroot ${dst_dir} /bin/bash -c "pip3 install ${PYTHON_PACKAGE_LIST}"
+    py_pkg_list=$(echo "${PYTHON_PACKAGE_LIST}")
+    if [ ! -z "${py_pkg_list}" ]; then
+        for package in ${py_pkg_list}
+        do
+            chroot ${dst_dir} /bin/bash -c "pip3 install ${package}"
+        done
+    fi
+    chroot ${dst_dir} /bin/bash -c "rm -rf /root/.cache"
 
     DEST_LANG="en_US.UTF-8"
     DEST_LANG_CN="zh_CN.UTF-8"
@@ -389,9 +360,8 @@ make_base_root() {
     eval 'LC_ALL=C LANG=C chroot $dst_dir /bin/bash -c "locale-gen $DEST_LANG_CN"'
     eval 'LC_ALL=C LANG=C chroot $dst_dir /bin/bash -c "update-locale LANG=$DEST_LANG LANGUAGE=$DEST_LANG"'
 
-    chroot "${dst_dir}" /bin/bash -c "systemctl disable hostapd dnsmasq NetworkManager-wait-online.service"
+    chroot "${dst_dir}" /bin/bash -c "systemctl disable hostapd NetworkManager-wait-online.service"
 
-     #/etc/apt/source.list
     chroot ${dst_dir} /bin/bash -c "apt clean"
 
     chroot ${dst_dir} /bin/bash -c "rm -f /var/lib/apt/lists/mirrors*"
@@ -399,11 +369,7 @@ make_base_root() {
 
     umount_chroot ${dst_dir}
     end_debootstrap ${dst_dir}
-    chmod 777 ${dst_dir}/home/ -R
 
-    #store size of dst_dir to ${tar_file}.info
-    local dusize=`du -sh ${dst_dir} 2> /dev/null |awk '{print $1}'`
-    echo "DIR_DU_SIZE ${dusize%%M}" >> ${tar_file}.info
     trap - INT TERM EXIT
 }
 
