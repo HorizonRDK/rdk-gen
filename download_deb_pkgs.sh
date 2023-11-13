@@ -15,7 +15,7 @@ main()
     [ ! -z ${dep_pkg_dir} ] && [ ! -d ${dep_pkg_dir} ] && mkdir ${dep_pkg_dir}
     cd ${dep_pkg_dir}
 
-    archive_url="http://archive.sunrisepi.tech/ubuntu-rdk"
+    archive_url="http://sunrise.horizon.cc/ubuntu-rdk"
 
     deb_pkg_list=(hobot-boot hobot-kernel-headers hobot-dtb hobot-bpu-drivers \
         hobot-configs hobot-utils \

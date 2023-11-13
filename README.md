@@ -47,7 +47,7 @@ android-sdk-libsparse-utils mtools parted dosfstools udev rsync
 执行以下命令下载交叉编译工具链：
 
 ```shell
-curl -fO http://archive.sunrisepi.tech/toolchain/gcc-ubuntu-9.3.0-2020.03-x86_64-aarch64-linux-gnu.tar.xz
+curl -fO http://sunrise.horizon.cc/toolchain/gcc-ubuntu-9.3.0-2020.03-x86_64-aarch64-linux-gnu.tar.xz
 ```
 
 解压并安装，建议安装到/opt目录下，通常向/opt目录写数据需要sudo权限，例如:
@@ -212,7 +212,7 @@ The debian package named by help is not supported, please check the input parame
 
 `bootloader`源码用于生成最小启动镜像`miniboot.img`，生成包含分区表、spl、ddr、bl31、uboot一体的启动固件。
 
-RDK X3的最小启动镜像一般会由地平线官方进行维护发布，可以从 [miniboot](http://archive.sunrisepi.tech/downloads/miniboot/) 下载对应的版本。
+RDK X3的最小启动镜像一般会由地平线官方进行维护发布，可以从 [miniboot](http://sunrise.horizon.cc/downloads/miniboot/) 下载对应的版本。
 
 按照以下步骤重新编译生成miniboot。
 
