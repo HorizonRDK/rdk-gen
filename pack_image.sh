@@ -103,7 +103,7 @@ function make_ubuntu_image()
     echo "tar -xzf ${ROOTFS_ORIG_DIR}/samplefs*.tar.gz -C ${ROOTFS_BUILD_DIR}"
     tar --same-owner --numeric-owner -xzpf ${ROOTFS_ORIG_DIR}/samplefs*.tar.gz -C ${ROOTFS_BUILD_DIR}
     mkdir -p ${ROOTFS_BUILD_DIR}/{home,home/root,mnt,root,usr/lib,var,media,tftpboot,var/lib,var/volatile,dev,proc,tmp,run,sys,userdata,app,boot/hobot,boot/config}
-    echo "2.0.0" >${ROOTFS_BUILD_DIR}/etc/version
+    echo "2.1.0" >${ROOTFS_BUILD_DIR}/etc/version
 
     # Custom Special Modifications
     echo "Custom Special Modifications"
