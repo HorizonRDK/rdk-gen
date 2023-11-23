@@ -31,9 +31,10 @@ main()
         tros-dnn-node tros-dnn-node-example tros-dnn-node-sample tros-elevation-net \
         tros-gesture-control tros-hand-gesture-detection tros-hand-lmk-detection \
         tros-hbm-img-msgs tros-hobot-app-xrrobot-body-tracking \
-        tros-hobot-app-xrrobot-gesture-control tros-hobot-audio tros-hobot-codec tros-hobot-cv \
+        tros-hobot-app-xrrobot-gesture-control tros-hobot-audio tros-hobot-chatbot \
+        tros-hobot-codec tros-hobot-cv \
         tros-hobot-falldown-detection tros-hobot-hdmi \
-        tros-hobot-image-publisher tros-hobot-mot tros-hobot-tts tros-hobot-usb-cam \
+        tros-hobot-image-publisher tros-hobot-llm tros-hobot-mot tros-hobot-tts tros-hobot-usb-cam \
         tros-hobot-vio tros-hobot-visualization tros-img-msgs tros-imu-sensor \
         tros-line-follower-model tros-line-follower-perception tros-mipi-cam \
         tros-mono2d-body-detection tros-mono2d-trash-detection \
