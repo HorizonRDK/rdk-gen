@@ -268,6 +268,19 @@ function make_debian_deb() {
         # set Depends
         sed -i 's/Depends: .*$/Depends: /' ${deb_dst_dir}/DEBIAN/control
 
+        cd ${debian_src_dir}/${pkg_name}/hobot_display_services
+        make || {
+            echo "make failed"
+            exit 1
+        }
+
+        mkdir -p $deb_dst_dir/usr/bin
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/display $deb_dst_dir/usr/bin/hobot_display_service
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/get_edid_raw_data $deb_dst_dir/usr/bin
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/get_hdmi_res $deb_dst_dir/usr/bin
+        mkdir -p $deb_dst_dir/usr/lib
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/liblt8618.so $deb_dst_dir/usr/lib
+
         is_allowed=1
         ;;
     hobot-wifi)
