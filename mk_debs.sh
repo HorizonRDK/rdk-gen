@@ -425,9 +425,28 @@ function make_debian_deb() {
 
         # set Depends
         sed -i 's/Depends: .*$/Depends: hobot-multimedia-dev,hobot-multimedia/' ${deb_dst_dir}/DEBIAN/control
-
+        
         is_allowed=1
         ;;
+    hobot-audio-config)
+        pkg_description="Configuration files and dtbo files of audio hat"
+
+        gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
+
+        # set Depends
+        sed -i 's/Depends: .*$/Depends: hobot-boot,hobot-dtb,hobot-configs/' ${deb_dst_dir}/DEBIAN/control
+        cd ${debian_src_dir}/${pkg_name}/debian/boot/overlays
+
+        make || {
+            echo "make failed"
+            exit 1
+        }
+
+        mkdir -p $deb_dst_dir/boot/overlays
+        cp -arf ${debian_src_dir}/${pkg_name}/debian/boot/overlays/*.dtbo $deb_dst_dir/boot/overlays
+        rm $deb_dst_dir/boot/overlays/Makefile
+        is_allowed=1
+    ;;
     hobot-miniboot)
         pkg_description="RDK Miniboot updater"
 
@@ -473,6 +492,7 @@ deb_pkg_list=(
     "hobot-spdev"
     "hobot-sp-samples"
     "hobot-multimedia-samples"
+    "hobot-audio-config"
 )
 
 function help_msg
