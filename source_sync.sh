@@ -57,6 +57,7 @@ o:hobot-sp-samples:HorizonRDK/hobot-sp-samples.git:
 o:hobot-utils:HorizonRDK/hobot-utils.git:
 o:hobot-wifi:HorizonRDK/hobot-wifi.git:
 o:hobot-multimedia-samples:HorizonRDK/hobot-multimedia-samples.git:
+o:hobot-audio-config:HorizonRDK/hobot-audio-config.git:
 "
 
 # exit on error on sync
