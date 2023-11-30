@@ -23,9 +23,15 @@ export IMAGE_DEPLOY_DIR=${HR_LOCAL_DIR}/deploy
 [ ! -z ${IMAGE_DEPLOY_DIR} ] && [ ! -d $IMAGE_DEPLOY_DIR ] && mkdir $IMAGE_DEPLOY_DIR
 
 IMG_FILE="${IMAGE_DEPLOY_DIR}/ubuntu-preinstalled-desktop-arm64.img"
-
 ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs
 ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs
+
+if [[ $# -eq 1 && "$1" = "server" ]]; then
+    IMG_FILE="${IMAGE_DEPLOY_DIR}/ubuntu-preinstalled-server-arm64.img"
+    ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs_server
+    ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs_server
+fi
+
 rm -rf ${ROOTFS_BUILD_DIR}
 [ ! -d $ROOTFS_BUILD_DIR ] && mkdir ${ROOTFS_BUILD_DIR}
 
@@ -196,8 +202,12 @@ function make_ubuntu_image()
     exit 0
 }
 
-if [ $# -eq 0 ];then
-    ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
+if [[ $# -eq 0 || ( $# -eq 1 && "$1" = "server" ) ]]; then
+    if [[ $# -eq 1 && "$1" = "server" ]]; then
+        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR} "server"
+    else
+        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
+    fi
     ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages
 fi
 
