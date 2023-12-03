@@ -121,7 +121,34 @@ function make_ubuntu_image()
     mkdir -p ${ROOTFS_BUILD_DIR}/app/hobot_debs
     [ -d "${HR_LOCAL_DIR}/deb_packages" ] && find "${HR_LOCAL_DIR}/deb_packages" -maxdepth 1 -type f -name '*.deb' -exec cp -f {} "${ROOTFS_BUILD_DIR}/app/hobot_debs" \;
     [ -d "${HR_LOCAL_DIR}/third_packages" ] && find "${HR_LOCAL_DIR}/third_packages" -maxdepth 1 -type f -name '*.deb' -exec cp -f {} "${ROOTFS_BUILD_DIR}/app/hobot_debs" \;
+    # merge deploy deb packages to rootfs, they are customer packages
+    [ -d "${HR_LOCAL_DIR}/deploy/deb_pkgs" ] && find "${HR_LOCAL_DIR}/deploy/deb_pkgs" -maxdepth 1 -type f -name '*.deb' -exec cp -f {} "${ROOTFS_BUILD_DIR}/app/hobot_debs" \;
+    # delete same deb packages, keep the latest version
+    cd "${ROOTFS_BUILD_DIR}/app/hobot_debs"
+    deb_list=$(ls -1 *.deb | sort)
+    for file in ${deb_list[@]}; do
+        # Extract package name and version
+        package=$(echo $file | awk -F"_" '{print $1}')
+        version=$(echo $file | awk -F"_" '{print $2}')
 
+        # If the current package name is different from the previous one, keep the current file (latest version)
+        if [ "$package" != "$previous_package" ]; then
+            previous_file="$file"
+            previous_package="$package"
+            previous_version="$version"
+        else
+            # If the current package name is the same as the previous one, compare versions and delete older version files
+            if dpkg --compare-versions "$version" gt "$previous_version"; then
+                # Current version is newer, delete previous version files
+                rm "${previous_file}"
+                previous_file="$file"
+                previous_version="$version"
+            else
+                # Previous version is newer, delete the current version file
+                rm "$file"
+            fi
+        fi
+    done
 
     install_packages ${ROOTFS_BUILD_DIR}
     rm ${ROOTFS_BUILD_DIR}/app/hobot_debs/ -rf
