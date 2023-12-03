@@ -26,7 +26,7 @@ IMG_FILE="${IMAGE_DEPLOY_DIR}/ubuntu-preinstalled-desktop-arm64.img"
 ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs
 ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs
 
-if [[ $# -eq 1 && "$1" = "server" ]]; then
+if [[ $# -ge 1 && "$1" = "server" ]]; then
     IMG_FILE="${IMAGE_DEPLOY_DIR}/ubuntu-preinstalled-server-arm64.img"
     ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs_server
     ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs_server
