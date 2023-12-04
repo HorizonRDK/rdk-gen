@@ -14,6 +14,7 @@ deb_pkg_list=(hobot-multimedia-samples \
     hobot-io-samples \
     hobot-bpu-drivers \
     hobot-kernel-headers \
+    hobot-miniboot \
     hobot-configs hobot-utils \
     hobot-display hobot-wifi \
     hobot-models-basic \
