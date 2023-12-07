@@ -40,6 +40,7 @@ SCRIPT_NAME=`basename $0`
 SOURCE_INFO="
 k:kernel:HorizonRDK/kernel.git:
 o:bootloader:HorizonRDK/bootloader.git:
+o:hobot-miniboot:HorizonRDK/hobot-miniboot.git:
 o:hobot-boot:HorizonRDK/hobot-boot.git:
 o:hobot-bpu-drivers:HorizonRDK/hobot-bpu-drivers.git:
 o:hobot-camera:HorizonRDK/hobot-camera.git:

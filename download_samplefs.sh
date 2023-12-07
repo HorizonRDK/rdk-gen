@@ -20,6 +20,9 @@ main()
 
     # Set the name of the file that records the latest version information
     VERSION_FILE="samplefs_desktop_latest.txt"
+    if [[ $# -eq 2 && "$2" = "server" ]]; then
+        VERSION_FILE="samplefs_server_latest.txt"
+    fi
 
     # Download the version information file
     if curl -fs -O --connect-timeout 5 "${SERVER_URL}/${VERSION_FILE}"; then
