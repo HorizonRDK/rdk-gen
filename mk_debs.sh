@@ -227,7 +227,7 @@ function make_debian_deb() {
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
         # set Depends
-        sed -i 's/Depends: .*$/Depends: hobot-boot/' ${deb_dst_dir}/DEBIAN/control
+        sed -i 's/Depends: .*$/Depends: hobot-boot, udisks2/' ${deb_dst_dir}/DEBIAN/control
 
         is_allowed=1
         ;;
