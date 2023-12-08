@@ -454,6 +454,13 @@ function make_debian_deb() {
             echo "make failed"
             exit 1
         }
+        cd ${debian_src_dir}/${pkg_name}/audio_gadget 
+        make || {
+            echo "make failed"
+            exit 1
+        }
+        mkdir $deb_dst_dir/usr/bin -p
+        cp -arf ${debian_src_dir}/${pkg_name}/audio_gadget/audio_gadget $deb_dst_dir/usr/bin
 
         mkdir -p $deb_dst_dir/boot/overlays
         cp -arf ${debian_src_dir}/${pkg_name}/debian/boot/overlays/*.dtbo $deb_dst_dir/boot/overlays
