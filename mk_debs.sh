@@ -227,7 +227,7 @@ function make_debian_deb() {
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
         # set Depends
-        sed -i 's/Depends: .*$/Depends: hobot-boot, udisks2/' ${deb_dst_dir}/DEBIAN/control
+        sed -i 's/Depends: .*$/Depends: hobot-boot, udisks2, hobot-audio-config/' ${deb_dst_dir}/DEBIAN/control
 
         is_allowed=1
         ;;
@@ -447,7 +447,7 @@ function make_debian_deb() {
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
         # set Depends
-        sed -i 's/Depends: .*$/Depends: hobot-boot,hobot-dtb,hobot-configs/' ${deb_dst_dir}/DEBIAN/control
+        sed -i 's/Depends: .*$/Depends: hobot-boot,hobot-dtb/' ${deb_dst_dir}/DEBIAN/control
         cd ${debian_src_dir}/${pkg_name}/debian/boot/overlays
 
         make || {
