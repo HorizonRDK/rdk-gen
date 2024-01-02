@@ -7,7 +7,7 @@
  # @LastEditTime: 2023-05-15 14:50:53
 ###
 
-archive_url="http://sunrise.horizon.cc/ubuntu-rdk"
+archive_url="http://sunrise.horizon.cc/ubuntu-rdk-beta"
 
 deb_pkg_list=(hobot-multimedia-samples \
     hobot-sp-samples \
@@ -85,12 +85,8 @@ get_download_pkg_list()
         download_pkg_list+=("${pkg_name},${VERSION},${PKG_FILE},${PKG_URL},${MD5SUM}")
 
         # delete name dose not start with "hobot" abd "tros"
-        for depend in ${DEPENDS[@]}
-        do
-            if [[ ! ${depend} =~ ^hobot ]] && [[ ! ${depend} =~ ^tros ]]; then
-                DEPENDS=$(echo "${DEPENDS[@]}" | sed "s/${depend}//g")
-            fi
-        done
+        DEPENDS=$(echo ${DEPENDS} | awk '{for(i=1;i<=NF;i++) if($i ~ /^hobot/ || $i ~ /^tros/) print $i}')
+
         # delete head and tail empty string
         DEPENDS=$(echo "${DEPENDS[@]}" | sed 's/^ *//g' | sed 's/ *$//g')
         # if depends not null, recursively parse dependent packages
