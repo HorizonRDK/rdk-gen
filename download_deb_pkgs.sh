@@ -7,7 +7,7 @@
  # @LastEditTime: 2023-05-15 14:50:53
 ###
 
-archive_url="http://sunrise.horizon.cc/ubuntu-rdk-beta"
+archive_url="http://sunrise.horizon.cc/ubuntu-rdk"
 
 deb_pkg_list=(hobot-multimedia-samples \
     hobot-sp-samples \
