@@ -23,9 +23,15 @@ export IMAGE_DEPLOY_DIR=${HR_LOCAL_DIR}/deploy
 [ ! -z ${IMAGE_DEPLOY_DIR} ] && [ ! -d $IMAGE_DEPLOY_DIR ] && mkdir $IMAGE_DEPLOY_DIR
 
 IMG_FILE="${IMAGE_DEPLOY_DIR}/ubuntu-preinstalled-desktop-arm64.img"
-
 ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs
 ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs
+
+if [[ $# -ge 1 && "$1" = "server" ]]; then
+    IMG_FILE="${IMAGE_DEPLOY_DIR}/ubuntu-preinstalled-server-arm64.img"
+    ROOTFS_ORIG_DIR=${HR_LOCAL_DIR}/rootfs_server
+    ROOTFS_BUILD_DIR=${IMAGE_DEPLOY_DIR}/rootfs_server
+fi
+
 rm -rf ${ROOTFS_BUILD_DIR}
 [ ! -d $ROOTFS_BUILD_DIR ] && mkdir ${ROOTFS_BUILD_DIR}
 
@@ -103,7 +109,7 @@ function make_ubuntu_image()
     echo "tar -xzf ${ROOTFS_ORIG_DIR}/samplefs*.tar.gz -C ${ROOTFS_BUILD_DIR}"
     tar --same-owner --numeric-owner -xzpf ${ROOTFS_ORIG_DIR}/samplefs*.tar.gz -C ${ROOTFS_BUILD_DIR}
     mkdir -p ${ROOTFS_BUILD_DIR}/{home,home/root,mnt,root,usr/lib,var,media,tftpboot,var/lib,var/volatile,dev,proc,tmp,run,sys,userdata,app,boot/hobot,boot/config}
-    echo "2.0.0" >${ROOTFS_BUILD_DIR}/etc/version
+    cat "${HR_LOCAL_DIR}/VERSION" > ${ROOTFS_BUILD_DIR}/etc/version
 
     # Custom Special Modifications
     echo "Custom Special Modifications"
@@ -115,7 +121,34 @@ function make_ubuntu_image()
     mkdir -p ${ROOTFS_BUILD_DIR}/app/hobot_debs
     [ -d "${HR_LOCAL_DIR}/deb_packages" ] && find "${HR_LOCAL_DIR}/deb_packages" -maxdepth 1 -type f -name '*.deb' -exec cp -f {} "${ROOTFS_BUILD_DIR}/app/hobot_debs" \;
     [ -d "${HR_LOCAL_DIR}/third_packages" ] && find "${HR_LOCAL_DIR}/third_packages" -maxdepth 1 -type f -name '*.deb' -exec cp -f {} "${ROOTFS_BUILD_DIR}/app/hobot_debs" \;
+    # merge deploy deb packages to rootfs, they are customer packages
+    [ -d "${HR_LOCAL_DIR}/deploy/deb_pkgs" ] && find "${HR_LOCAL_DIR}/deploy/deb_pkgs" -maxdepth 1 -type f -name '*.deb' -exec cp -f {} "${ROOTFS_BUILD_DIR}/app/hobot_debs" \;
+    # delete same deb packages, keep the latest version
+    cd "${ROOTFS_BUILD_DIR}/app/hobot_debs"
+    deb_list=$(ls -1 *.deb | sort)
+    for file in ${deb_list[@]}; do
+        # Extract package name and version
+        package=$(echo $file | awk -F"_" '{print $1}')
+        version=$(echo $file | awk -F"_" '{print $2}')
 
+        # If the current package name is different from the previous one, keep the current file (latest version)
+        if [ "$package" != "$previous_package" ]; then
+            previous_file="$file"
+            previous_package="$package"
+            previous_version="$version"
+        else
+            # If the current package name is the same as the previous one, compare versions and delete older version files
+            if dpkg --compare-versions "$version" gt "$previous_version"; then
+                # Current version is newer, delete previous version files
+                rm "${previous_file}"
+                previous_file="$file"
+                previous_version="$version"
+            else
+                # Previous version is newer, delete the current version file
+                rm "$file"
+            fi
+        fi
+    done
 
     install_packages ${ROOTFS_BUILD_DIR}
     rm ${ROOTFS_BUILD_DIR}/app/hobot_debs/ -rf
@@ -196,8 +229,12 @@ function make_ubuntu_image()
     exit 0
 }
 
-if [ $# -eq 0 ];then
-    ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
+if [[ $# -eq 0 || ( $# -eq 1 && "$1" = "server" ) ]]; then
+    if [[ $# -eq 1 && "$1" = "server" ]]; then
+        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR} "server"
+    else
+        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
+    fi
     ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages
 fi
 

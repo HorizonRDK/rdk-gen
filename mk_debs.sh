@@ -227,7 +227,7 @@ function make_debian_deb() {
         gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
 
         # set Depends
-        sed -i 's/Depends: .*$/Depends: hobot-boot/' ${deb_dst_dir}/DEBIAN/control
+        sed -i 's/Depends: .*$/Depends: hobot-boot, udisks2, hobot-audio-config/' ${deb_dst_dir}/DEBIAN/control
 
         is_allowed=1
         ;;
@@ -267,6 +267,20 @@ function make_debian_deb() {
 
         # set Depends
         sed -i 's/Depends: .*$/Depends: /' ${deb_dst_dir}/DEBIAN/control
+
+        cd ${debian_src_dir}/${pkg_name}/hobot_display_services
+        make || {
+            echo "make failed"
+            exit 1
+        }
+
+        mkdir -p $deb_dst_dir/usr/bin
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/display $deb_dst_dir/usr/bin/hobot_display_service
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/get_edid_raw_data $deb_dst_dir/usr/bin
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/get_hdmi_res $deb_dst_dir/usr/bin
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/hobot_parse_std_timing $deb_dst_dir/usr/bin
+        mkdir -p $deb_dst_dir/usr/lib
+        cp -a ${debian_src_dir}/${pkg_name}/hobot_display_services/liblt8618.so $deb_dst_dir/usr/lib
 
         is_allowed=1
         ;;
@@ -425,6 +439,42 @@ function make_debian_deb() {
 
         # set Depends
         sed -i 's/Depends: .*$/Depends: hobot-multimedia-dev,hobot-multimedia/' ${deb_dst_dir}/DEBIAN/control
+        
+        is_allowed=1
+        ;;
+    hobot-audio-config)
+        pkg_description="Configuration files and dtbo files of audio hat"
+
+        gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
+
+        # set Depends
+        sed -i 's/Depends: .*$/Depends: hobot-boot,hobot-dtb/' ${deb_dst_dir}/DEBIAN/control
+        cd ${debian_src_dir}/${pkg_name}/debian/boot/overlays
+
+        make || {
+            echo "make failed"
+            exit 1
+        }
+        cd ${debian_src_dir}/${pkg_name}/audio_gadget 
+        make || {
+            echo "make failed"
+            exit 1
+        }
+        mkdir $deb_dst_dir/usr/bin -p
+        cp -arf ${debian_src_dir}/${pkg_name}/audio_gadget/audio_gadget $deb_dst_dir/usr/bin
+
+        mkdir -p $deb_dst_dir/boot/overlays
+        cp -arf ${debian_src_dir}/${pkg_name}/debian/boot/overlays/*.dtbo $deb_dst_dir/boot/overlays
+        rm $deb_dst_dir/boot/overlays/Makefile
+        is_allowed=1
+    ;;
+    hobot-miniboot)
+        pkg_description="RDK Miniboot updater"
+
+        gen_contrl_file "${deb_dst_dir}/DEBIAN" "${pkg_name}" "${pkg_version}" "${pkg_description}"
+
+        # set Depends
+        sed -i 's/Depends: .*$/Depends: /' ${deb_dst_dir}/DEBIAN/control
 
         is_allowed=1
         ;;
@@ -463,6 +513,8 @@ deb_pkg_list=(
     "hobot-spdev"
     "hobot-sp-samples"
     "hobot-multimedia-samples"
+    "hobot-miniboot"
+    "hobot-audio-config"
 )
 
 function help_msg
