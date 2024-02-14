@@ -36,7 +36,7 @@ get_package_list()
 ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") $(get_package_list "desktop") "
 ubuntufs_src="${LOCAL_DIR}/desktop"
 samplefs_version="v2.1.0"
-
+tar_file=${ubuntufs_src}/samplefs_desktop-${samplefs_version}.tar.gz
 # Ubuntu Desktop
 if [[ $1 == "d"*  ]] ; then
     ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") $(get_package_list "desktop") "
@@ -59,7 +59,6 @@ if [[ $1 == "b"*  ]] ; then
 fi
 
 echo "Make ${tar_file}"
-echo ${ADD_PACKAGE_LIST}
 
 root_path=${ubuntufs_src}/${RELEASE}-xj3-${ARCH}
 
@@ -79,6 +78,7 @@ case $RELEASE in
     ;;
 esac
 
+echo ${ADD_PACKAGE_LIST}
 
 log_out()
 {
