@@ -74,7 +74,7 @@ case $RELEASE in
         # Dependent debootstarp packages
         DEBOOTSTRAP_COMPONENTS="main,universe"
         DEBOOTSTRAP_LIST+=""
-        ADD_PACKAGE_LIST+=""
+        ADD_PACKAGE_LIST+="ros-foxy-ros-base"
     ;;
 esac
 
@@ -165,6 +165,8 @@ create_base_sources_list()
 deb http://${UBUNTU_MIRROR} $release main restricted universe multiverse
 #deb-src http://${UBUNTU_MIRROR} $release main restricted universe multiverse
 EOF
+    echo "deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu focal main" | tee ${basedir}/etc/apt/sources.list.d/ros2.list >/dev/null
+    cp -af ${LOCAL_DIR}/ros-archive-keyring.gpg  ${basedir}/usr/share/keyrings/
 }
 
 
