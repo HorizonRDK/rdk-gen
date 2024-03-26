@@ -150,7 +150,7 @@ source
 ## Kernel
 
 Execute the following command to compile the Linux kernel:
-``````shell
+```shell
 ./mk_kernel.sh
 ```
 
@@ -197,7 +197,8 @@ Executing the following command will rebuild all Debian packages (kernel compila
 
 ```shell
 ./mk_deb.sh
-```  Upon completion of the build, deb software packages will be generated in the `deploy/deb_pkgs` directory.
+```
+Upon completion of the build, deb software packages will be generated in the `deploy/deb_pkgs` directory.
 
 ### Build Individual Software Package
 
@@ -246,7 +247,8 @@ The predefined configuration files are adapted to different hardware configurati
 | Board Configuration File                          | Memory             | Rootfs       | Miniboot Storage    | Main Storage |
 | -------------------------------------------------| ------------------ | ------------ | ------------------- | ------------ |
 | board_ubuntu_emmc_sdcard_config.mk               | LPDDR4 2GB         | ubuntu-20.04  | emmc                | sdcard       |
-| board_ubuntu_emmc_sdcard_samsung_4GB_config.mk   | LPDDR4 4GB         | ubuntu-20.04  | emmc                | sdcard       || board_ubuntu_nand_sdcard_config.mk             | LPDDR4 2GB | ubuntu-20.04 | nand               | sdcard/emmc |
+| board_ubuntu_emmc_sdcard_samsung_4GB_config.mk   | LPDDR4 4GB         | ubuntu-20.04  | emmc                | sdcard       |
+| board_ubuntu_nand_sdcard_config.mk             | LPDDR4 2GB | ubuntu-20.04 | nand               | sdcard/emmc |
 | board_ubuntu_nand_sdcard_samsung_4GB_config.mk | LPDDR4 4GB | ubuntu-20.04 | nand               | sdcard/emmc |
 
 **Minimum Boot Image Storage:** Burn the storage of miniboot. Users of RDK X3 and RDK X3 Module all choose the nand flash method.
@@ -294,7 +296,8 @@ After modular compilation, the pack command can be executed to pack disk_nand_mi
 
 ```shell
 ./xbuild.sh pack
-```## Creating Ubuntu File System
+```
+## Creating Ubuntu File System
 
 This chapter introduces how to create the `samplefs_desktop-v2.0.0.tar.gz` file system. Horizon will maintain this file system, and if there are customization requirements, it needs to be re-created according to the instructions in this chapter.
 
@@ -335,13 +338,14 @@ sudo debootstrap --arch [platform] [release code name] [directory] [source]
 
 #### chroot
 
-chroot stands for change root directory. In Linux systems, the default directory structure starts with /, which is the root. After using chroot, the system's directory structure will start from the specified location as the new root directory /.
+chroot stands for change root directory. In Linux systems, the default directory structure starts with `/`, which is the root. After using chroot, the system's directory structure will start from the specified location as the new root directory `/`.
 
 #### parted
 
 parted is a powerful disk partition tool developed by the GNU organization that supports adjusting partition sizes. Unlike fdisk, it can handle common partition formats including ext2, ext3, fat16, fat32, NTFS, ReiserFS, JFS, XFS, UFS, HFS, and Linux swap partitions.
 
-### Script Code for Creating Ubuntu RootfsDownload the `rdk-gen` source code:
+### Script Code for Creating Ubuntu Rootfs
+Download the `rdk-gen` source code:
 
 ```shell
 git clone https://github.com/HorizonRDK/rdk-gen.git
@@ -388,7 +392,8 @@ rootfs/                                    # After extracting samplefs_desktop-v
 └── var
 
 21 directories, 5 files
-```### Customization
+```
+### Customization
 
 Key variable definitions in the code:
 
