@@ -21,7 +21,7 @@ function gen_contrl_file() {
     Version="$3"
     Description="$4"
     Architecture="$ARCH"
-    Maintainer="technical_support@horizon.ai"
+    Maintainer="technical_support@horizon.cc"
     if [ ! -f ${control_path}/control ];then
         touch ${control_path}/control
     fi
