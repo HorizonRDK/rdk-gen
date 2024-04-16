@@ -2,6 +2,12 @@
 
 set -eu
 
+this_user="$(whoami)"
+if [ "${this_user}" != "root" ]; then
+	echo "[ERROR]: This script requires root privileges. Please execute it with sudo."
+	exit 1
+fi
+
 BUILD_USER=$(logname)
 echo "current build user:${BUILD_USER}."
 LOCAL_DIR="$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )" && pwd )"
@@ -339,6 +345,12 @@ make_base_root() {
 
 		# Fixed GCC version: 11.x.x
 		chroot "${dst_dir}" /bin/bash -c "apt-mark hold cpp-11 g++-11 gcc-11-base gcc-11 libasan5 libgcc-11-dev libstdc++-11-dev"
+
+		# Add soft links to be compatible with different versions of cross-compilation toolchains
+		chroot "${dst_dir}" /bin/bash -c "ln -sf aarch64-linux-gnu/ /lib/aarch64-none-linux-gnu"
+		# Add 11.2.1 and 11.3.1 soft links to itself
+		chroot "${dst_dir}" /bin/bash -c "ln -sf . /lib/aarch64-none-linux-gnu/11.2.1"
+		chroot "${dst_dir}" /bin/bash -c "ln -sf . /lib/aarch64-none-linux-gnu/11.3.1"
 	fi
 
 	# upgrade packages
