@@ -18,7 +18,7 @@ LOCAL_DIR="$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )" && pwd )"
 RELEASE="jammy"
 ARCH=arm64
 DEBOOTSTRAP_COMPONENTS="main,universe"
-UBUNTU_MIRROR="mirrors.tuna.tsinghua.edu.cn/ubuntu-ports/"
+UBUNTU_MIRROR="mirrors.aliyun.com/ubuntu-ports/"
 
 # To use a local proxy to cache apt packages, you need to install apt-cacher-ng
 apt_mirror="http://localhost:3142/${UBUNTU_MIRROR}"
@@ -178,7 +178,7 @@ create_base_sources_list()
 deb http://${UBUNTU_MIRROR} $release main restricted universe multiverse
 #deb-src http://${UBUNTU_MIRROR} $release main restricted universe multiverse
 EOF
-	echo "deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors.tuna.tsinghua.edu.cn/ros2/ubuntu ${release} main" | tee "${basedir}"/etc/apt/sources.list.d/ros2.list >/dev/null
+	echo "deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors.aliyun.com/ros2/ubuntu ${release} main" | tee "${basedir}"/etc/apt/sources.list.d/ros2.list >/dev/null
 	cp -af "${LOCAL_DIR}"/ros-archive-keyring.gpg  "${basedir}"/usr/share/keyrings/
 }
 
@@ -398,6 +398,12 @@ make_base_root() {
 	eval 'LC_ALL=C LANG=C chroot $dst_dir /bin/bash -c "update-locale LANG=$DEST_LANG LANGUAGE=$DEST_LANG"'
 
 	chroot "${dst_dir}" /bin/bash -c "systemctl disable hostapd NetworkManager-wait-online.service"
+
+	chroot "${dst_dir}" /bin/bash -c "sed 's/5min/2sec/g' /lib/systemd/system/networking.service > /tmp/networking.service"
+	chroot "${dst_dir}" /bin/bash -c "mv /tmp/networking.service /lib/systemd/system/networking.service"
+
+	chroot "${dst_dir}" /bin/bash -c "touch -d '2022-04-18 08:00:00' /etc/apt/sources.list"
+	chroot "${dst_dir}" /bin/bash -c "touch -d '2022-04-18 08:00:00' /etc/apt/sources.list.d/ros2.list"
 
 	chroot "${dst_dir}" /bin/bash -c "apt clean"
 
