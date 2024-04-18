@@ -18,7 +18,7 @@ LOCAL_DIR="$( cd "$( dirname "$(readlink -f "${BASH_SOURCE[0]}")" )" && pwd )"
 RELEASE="jammy"
 ARCH=arm64
 DEBOOTSTRAP_COMPONENTS="main,universe"
-UBUNTU_MIRROR="mirrors.aliyun.com/ubuntu-ports/"
+UBUNTU_MIRROR="mirrors4.tuna.tsinghua.edu.cn/ubuntu-ports/"
 
 # To use a local proxy to cache apt packages, you need to install apt-cacher-ng
 apt_mirror="http://localhost:3142/${UBUNTU_MIRROR}"
@@ -178,7 +178,7 @@ create_base_sources_list()
 deb http://${UBUNTU_MIRROR} $release main restricted universe multiverse
 #deb-src http://${UBUNTU_MIRROR} $release main restricted universe multiverse
 EOF
-	echo "deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors.aliyun.com/ros2/ubuntu ${release} main" | tee "${basedir}"/etc/apt/sources.list.d/ros2.list >/dev/null
+	echo "deb [arch=arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://mirrors4.tuna.tsinghua.edu.cn/ros2/ubuntu ${release} main" | tee "${basedir}"/etc/apt/sources.list.d/ros2.list >/dev/null
 	cp -af "${LOCAL_DIR}"/ros-archive-keyring.gpg  "${basedir}"/usr/share/keyrings/
 }
 
