@@ -351,6 +351,12 @@ make_base_root() {
 		# Add 11.2.1 and 11.3.1 soft links to itself
 		chroot "${dst_dir}" /bin/bash -c "ln -sf . /lib/aarch64-none-linux-gnu/11.2.1"
 		chroot "${dst_dir}" /bin/bash -c "ln -sf . /lib/aarch64-none-linux-gnu/11.3.1"
+		
+		# Add firefox-esr
+		chroot "${dst_dir}" /bin/bash -c "apt remove firefox -y"
+		chroot "${dst_dir}" /bin/bash -c "apt install gpg-agent -y"
+		chroot "${dst_dir}" /bin/bash -c "echo -e '\n' | add-apt-repository ppa:mozillateam/ppa"
+		chroot "${dst_dir}" /bin/bash -c "apt install firefox-esr -y"
 	fi
 
 	# upgrade packages
