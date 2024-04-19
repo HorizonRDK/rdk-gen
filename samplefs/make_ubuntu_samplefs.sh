@@ -27,7 +27,7 @@ apt_extra="-o Acquire::http::Proxy=\"http://localhost:3142\""
 PYTHON_PACKAGE_LIST="numpy opencv-python pySerial i2cdev spidev matplotlib pillow \
 websocket websockets lark-parser netifaces google protobuf==3.20.1 "
 
-DEBOOTSTRAP_LIST="systemd sudo locales apt-utils init dbus kmod udev bash-completion "
+DEBOOTSTRAP_LIST="systemd sudo locales apt-utils init dbus kmod udev bash-completion ntp "
 
 get_package_list()
 {
@@ -401,9 +401,6 @@ make_base_root() {
 
 	chroot "${dst_dir}" /bin/bash -c "sed 's/5min/2sec/g' /lib/systemd/system/networking.service > /tmp/networking.service"
 	chroot "${dst_dir}" /bin/bash -c "mv /tmp/networking.service /lib/systemd/system/networking.service"
-
-	chroot "${dst_dir}" /bin/bash -c "touch -d '2022-04-18 08:00:00' /etc/apt/sources.list"
-	chroot "${dst_dir}" /bin/bash -c "touch -d '2022-04-18 08:00:00' /etc/apt/sources.list.d/ros2.list"
 
 	chroot "${dst_dir}" /bin/bash -c "apt clean"
 
