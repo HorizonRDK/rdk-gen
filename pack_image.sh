@@ -13,7 +13,7 @@ export HR_LOCAL_DIR=$(realpath $(cd $(dirname $0); pwd))
 
 this_user="$(whoami)"
 if [ "${this_user}" != "root" ]; then
-    echo "ERROR: This script requires root privilege"
+    echo "[ERROR]: This script requires root privileges. Please execute it with sudo."
     exit 1
 fi
 
