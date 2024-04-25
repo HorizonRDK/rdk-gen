@@ -137,10 +137,18 @@ download_deb_pkgs()
 main()
 {
     dep_pkg_dir="$1"
+    ubuntu_version="focal"
+
+    if [ $# -eq 2 ]; then
+        ubuntu_version="$2"
+    fi
+
+    package_url="/dists/""$ubuntu_version""/main/binary-arm64/Packages"
+
     [ ! -z ${dep_pkg_dir} ] && [ ! -d ${dep_pkg_dir} ] && mkdir ${dep_pkg_dir}
     cd ${dep_pkg_dir}
 
-    if curl -sfO --connect-timeout 5 "${archive_url}/dists/focal/main/binary-arm64/Packages"; then
+    if curl -sfO --connect-timeout 5 "${archive_url}${package_url}"; then
         echo "Packages downloaded successfully"
     else
         echo "Packages downloaded failed"
