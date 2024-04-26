@@ -45,25 +45,29 @@ ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") $(get_
 ubuntufs_src="${LOCAL_DIR}/desktop"
 samplefs_version="v2.1.0"
 tar_file=${ubuntufs_src}/samplefs_desktop-${samplefs_version}.tar.gz
-# Ubuntu Desktop
-if [[ $1 == "d"*  ]] ; then
-	ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") $(get_package_list "desktop") "
-	ubuntufs_src="${LOCAL_DIR}/desktop"
-	tar_file=${ubuntufs_src}/samplefs_desktop-${samplefs_version}.tar.gz
-fi
 
-# Ubuntu Server
-if [[ $1 == "s"*  ]] ; then
-	ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") "
-	ubuntufs_src="${LOCAL_DIR}/server"
-	tar_file=${ubuntufs_src}/samplefs_server-${samplefs_version}.tar.gz
-fi
 
-# Ubuntu Base
-if [[ $1 == "b"*  ]] ; then
-	ADD_PACKAGE_LIST="$(get_package_list "base") "
-	ubuntufs_src="${LOCAL_DIR}/base"
-	tar_file=${ubuntufs_src}/samplefs_base-${samplefs_version}.tar.gz
+if [ $# -ge 1 ] ; then
+	# Ubuntu Desktop
+	if [[ $1 == "d"*  ]] ; then
+		ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") $(get_package_list "desktop") "
+		ubuntufs_src="${LOCAL_DIR}/desktop"
+		tar_file=${ubuntufs_src}/samplefs_desktop-${samplefs_version}.tar.gz
+	fi
+
+	# Ubuntu Server
+	if [[ $1 == "s"*  ]] ; then
+		ADD_PACKAGE_LIST="$(get_package_list "base") $(get_package_list "server") "
+		ubuntufs_src="${LOCAL_DIR}/server"
+		tar_file=${ubuntufs_src}/samplefs_server-${samplefs_version}.tar.gz
+	fi
+
+	# Ubuntu Base
+	if [[ $1 == "b"*  ]] ; then
+		ADD_PACKAGE_LIST="$(get_package_list "base") "
+		ubuntufs_src="${LOCAL_DIR}/base"
+		tar_file=${ubuntufs_src}/samplefs_base-${samplefs_version}.tar.gz
+	fi
 fi
 
 echo "Make ${tar_file}"
