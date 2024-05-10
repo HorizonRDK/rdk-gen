@@ -102,4 +102,5 @@ EOF
   chroot "${DST_ROOTFS_DIR}" /bin/bash -c "(echo ${SUN_PWD};echo ${SUN_PWD};) | passwd ${SUN_USERNAME}"
 
   chroot "${DST_ROOTFS_DIR}" /bin/bash -c "cp -aRf /etc/skel/. /root/"
+  chroot "${DST_ROOTFS_DIR}" /bin/bash -c "cp -aRf /etc/skel/. /home/${SUN_USERNAME}"
 }
