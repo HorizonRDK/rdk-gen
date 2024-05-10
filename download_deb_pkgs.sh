@@ -136,11 +136,49 @@ download_deb_pkgs()
 
 main()
 {
-    dep_pkg_dir="$1"
+    #./download_deb_pkgs.sh
+    #deb_dir must first
+    #-u focal/jammy default focal 
+    #-d release/beta default release
     ubuntu_version="focal"
+    develop_version="release"
 
-    if [ $# -eq 2 ]; then
-        ubuntu_version="$2"
+    if [ $# -ge 1 ] ; then
+        dep_pkg_dir="$1"
+        shift
+        echo "usag: ./download_deb_pkgs.sh dep_pkg_dir -u jammy -d release"
+    else
+        echo "failed!!!"
+        echo "usag: ./download_deb_pkgs.sh dep_pkg_dir -u jammy -d release"
+        return
+    fi
+
+    while (($# > 0))
+    do
+        if [ "$1" == "-u" ] ; then
+            shift
+            ubuntu_version=$1
+        fi
+        if [ "$1" == "-d" ] ; then
+            shift
+            develop_version=$1
+        fi
+        shift
+    done
+
+    if [ "$develop_version" == "beta" ] ; then
+        archive_url="http://sunrise.horizon.cc/ubuntu-rdk-beta"
+
+        deb_pkg_list=(hobot-multimedia-samples \
+        hobot-sp-samples \
+        hobot-io-samples \
+        hobot-bpu-drivers \
+        hobot-kernel-headers \
+        hobot-miniboot \
+        hobot-configs hobot-utils \
+        hobot-display hobot-wifi \
+        hobot-models-basic \
+        tros-humble )
     fi
 
     package_url="/dists/""$ubuntu_version""/main/binary-arm64/Packages"
