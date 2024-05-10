@@ -231,11 +231,11 @@ function make_ubuntu_image()
 
 if [[ $# -eq 0 || ( $# -eq 1 && "$1" = "server" ) ]]; then
     if [[ $# -eq 1 && "$1" = "server" ]]; then
-        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR} "server"
+        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR} "-u" "jammy" "-t" "server"
     else
-        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR}
+        ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR} "-u" "jammy"
     fi
-    ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages
+    ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages "-u" "jammy" "-d" "beta"
 fi
 
 make_ubuntu_image
