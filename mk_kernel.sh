@@ -9,8 +9,8 @@
 
 set -e
 
-export CROSS_COMPILE=/opt/gcc-ubuntu-9.3.0-2020.03-x86_64-aarch64-linux-gnu/bin/aarch64-linux-gnu-
-export LD_LIBRARY_PATH=/opt/gcc-ubuntu-9.3.0-2020.03-x86_64-aarch64-linux-gnu/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
+export CROSS_COMPILE=/opt/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+export LD_LIBRARY_PATH=/opt/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu/lib64:$LD_LIBRARY_PATH
 export ARCH=arm64
 export HR_TOP_DIR=$(realpath $(cd $(dirname $0); pwd))
 export HR_LOCAL_DIR=$(realpath $(cd $(dirname $0); pwd))
