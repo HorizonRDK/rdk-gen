@@ -387,6 +387,7 @@ make_base_root() {
 
 	if [ "${RELEASE}" == "jammy" ]; then
 		chroot "${dst_dir}" /bin/bash -c "apt install ros-humble-ros-base -y"
+		chroot "${dst_dir}" /bin/bash -c "apt install ros-humble-cv-bridge -y"
 	fi
 	
 	chroot "${dst_dir}" /bin/bash -c "dpkg --get-selections" | grep -v deinstall | awk '{print $1}' | cut -f1 -d':' | sort > "${tar_file}".info
