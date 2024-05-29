@@ -235,7 +235,7 @@ if [[ $# -eq 0 || ( $# -eq 1 && "$1" = "server" ) ]]; then
     else
         ${HR_LOCAL_DIR}/download_samplefs.sh ${ROOTFS_ORIG_DIR} "-u" "jammy"
     fi
-    ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages "-u" "jammy" "-d" "beta"
+    ${HR_LOCAL_DIR}/download_deb_pkgs.sh ${HR_LOCAL_DIR}/deb_packages "-u" "jammy"
 fi
 
 make_ubuntu_image
