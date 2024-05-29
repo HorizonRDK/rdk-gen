@@ -356,12 +356,14 @@ make_base_root() {
 		chroot "${dst_dir}" /bin/bash -c "ln -sf . /lib/aarch64-none-linux-gnu/11.2.1"
 		chroot "${dst_dir}" /bin/bash -c "ln -sf . /lib/aarch64-none-linux-gnu/11.3.1"
 		
-		# Ubuntu Desktop Add firefox-esr
+		# Ubuntu Desktop Add firefox from xtradeb/apps
 		if [[ $ubuntufs_src == "${LOCAL_DIR}/desktop"  ]] ; then
 			chroot "${dst_dir}" /bin/bash -c "apt remove firefox -y"
 			chroot "${dst_dir}" /bin/bash -c "apt install gpg-agent -y"
-			chroot "${dst_dir}" /bin/bash -c "echo -e '\n' | add-apt-repository ppa:mozillateam/ppa"
-			chroot "${dst_dir}" /bin/bash -c "apt install firefox-esr -y"
+			chroot "${dst_dir}" /bin/bash -c "add-apt-repository ppa:xtradeb/apps -y"
+			chroot "${dst_dir}" /bin/bash -c "apt install firefox -y"
+			# ppa can not use apt_extra,so install here
+			chroot "${dst_dir}" /bin/bash -c "apt install firefox-locale-zh-hans -y"
 		fi
 	fi
 
