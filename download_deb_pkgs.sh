@@ -168,7 +168,9 @@ main()
 
     if [ "$develop_version" == "beta" ] ; then
         archive_url="http://sunrise.horizon.cc/ubuntu-rdk-beta"
+    fi
 
+    if [ "$ubuntu_version" == "jammy" ] ; then
         deb_pkg_list=(hobot-multimedia-samples \
         hobot-sp-samples \
         hobot-io-samples \
